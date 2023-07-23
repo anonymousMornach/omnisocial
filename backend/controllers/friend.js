@@ -1,0 +1,114 @@
+const User = require('../schema/User');
+
+// Send friend request to user
+exports.sendFriendRequest = async (req, res) => {
+    try {
+        const senderUser = await User.findOne({ username: req.params.username });
+        const friendUser = await User.findOne({ username: req.body.friendUsername });
+
+        if (!senderUser || !friendUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Prevent sending duplicate friend requests
+        if (senderUser.friendRequestSent.includes(friendUser._id)) {
+            return res.status(400).json({ message: 'Friend request already sent' });
+        }
+
+        senderUser.friendRequestSent.push(friendUser._id);
+        friendUser.friendRequestReceived.push(senderUser._id);
+
+        await senderUser.save();
+        await friendUser.save();
+
+        res.json(senderUser);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+// Accept friend request
+exports.acceptFriendRequest = async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username });
+        const friendUser = await User.findOne({ username: req.body.friendUsername });
+
+        if (!user || !friendUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Remove friend request after acceptance
+        user.friendRequestReceived.pull(friendUser._id);
+        friendUser.friendRequestSent.pull(user._id);
+
+        user.friends.push(friendUser._id);
+        friendUser.friends.push(user._id);
+
+        await user.save();
+        await friendUser.save();
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+// Remove friend request
+exports.removeFriendRequest = async (req, res) => {
+    try {
+        const senderUser = await User.findOne({ username: req.params.username });
+        const friendUser = await User.findOne({ username: req.body.friendUsername });
+
+        if (!senderUser || !friendUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        senderUser.friendRequestSent.pull(friendUser._id);
+        friendUser.friendRequestReceived.pull(senderUser._id);
+
+        await senderUser.save();
+        await friendUser.save();
+
+        res.json(senderUser);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+// Remove friend from user
+exports.removeFriendFromUser = async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username });
+        const friendUser = await User.findOne({ username: req.body.friendUsername });
+
+        if (!user || !friendUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.friends.pull(friendUser._id);
+        friendUser.friends.pull(user._id);
+
+        await user.save();
+        await friendUser.save();
+
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+// Get friends of user with pagination
+exports.getFriendsOfUser = async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username }).populate('friends');
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+
+        const friends = user.friends.slice(startIndex, endIndex);
+        res.json(friends);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
