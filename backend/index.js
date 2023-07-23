@@ -17,6 +17,6 @@ app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/friends", friendRoutes);
 
-app.listen(2000, () => {
+app.listen(process.env.PORT || 2000, () => {
     console.log("server is running on port 2000");
 });
