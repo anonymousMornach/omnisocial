@@ -305,8 +305,15 @@ const postDataList = [
 
 // Function to generate a random image URL
 const getRandomImageURL = () => {
-    return `https://source.unsplash.com/featured`;
+    const imageNumber = Math.floor(Math.random() * 1000);
+    return `https://picsum.photos/id/${imageNumber}/500/500`;
 };
+// Function to generate a random video URL
+const getRandomVideoURL = () => {
+    const videoNumber = Math.floor(Math.random() * 1000);
+    return `https://www.youtube.com/watch?v=${videoNumber}`;
+}
+
 // Function to delete all users and posts from the database
 const deleteAllUsersAndPosts = async () => {
     try {
@@ -329,6 +336,7 @@ deleteAllUsersAndPosts().then(() => {
             username: userData.username,
             email: userData.email,
             password: hashedPassword,
+            profilePicture: getRandomImageURL(),
         });
 
         await newUser.save();
