@@ -95,7 +95,7 @@ export default function CenterMain(props: any) {
                     <CardMedia
                         component="img"
                         height="140"
-                        image={user.profilePic ? user.profilePic : "https://img.freepik.com/free-photo/juicy-steak-medium-rare-beef-with-spices-grilled-vegetables_24972-2326.jpg?w=1800&t=st=1690211017~exp=1690211617~hmac=4dd78458c0cfd335423c0fb5426b0515b6a6bb2c9aabec6386e38a1509bee27c"}
+                        image={(user && user.profilePic) ? user.profilePic : "https://source.unsplash.com/featured"}
                         alt={user ? user.name : "user"}
                     />
                     <CardContent>
