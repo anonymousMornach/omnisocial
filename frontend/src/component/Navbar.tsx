@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Home', 'People', 'Chat'];
+const pages = ['Feed', 'People', 'Chat'];
 const settings = ['Profile', 'Settings', 'Logout'];
 
 function Navbar(props:any) {
@@ -36,7 +36,9 @@ function Navbar(props:any) {
     };
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" sx={{
+            backgroundColor:'#000'
+        }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -55,7 +57,7 @@ function Navbar(props:any) {
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO
+                        OmniSocial
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -89,7 +91,16 @@ function Navbar(props:any) {
                         >
                             {pages.map((page) => (
                                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
+                                    <Typography
+                                        component="a"
+                                        href={`/${page.toLowerCase()}`}
+                                        sx={{
+                                            color: 'inherit',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        {page}
+                                    </Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -99,7 +110,7 @@ function Navbar(props:any) {
                         variant="h5"
                         noWrap
                         component="a"
-                        href=""
+                        href="/"
                         sx={{
                             mr: 2,
                             display: { xs: 'flex', md: 'none' },
@@ -111,7 +122,7 @@ function Navbar(props:any) {
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO
+                        OmniSocial
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
@@ -149,7 +160,16 @@ function Navbar(props:any) {
                         >
                             {settings.map((setting) => (
                                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
+                                    <Typography
+                                        component="a"
+                                        href={`/${setting.toLowerCase()}`}
+                                        sx={{
+                                            color: 'inherit',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                    {setting}
+                                    </Typography>
                                 </MenuItem>
                             ))}
                         </Menu>

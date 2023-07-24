@@ -3,6 +3,7 @@ import axios from "axios";
 import {useState, useEffect} from "react";
 import Navbar from "../component/Navbar";
 import Cookies from "universal-cookie";
+import Main from "../component/Main";
 const cookies = new Cookies();
 
 export default function Home() {
@@ -29,6 +30,7 @@ export default function Home() {
     return (
         <>
             <Navbar user={user}/>
+            <Main user={user}/>
         </>
     );
 }
