@@ -31,7 +31,7 @@ exports.register = async (req, res) => {
         //add token
         const savedUser = await newUser.save();
         const token = jwt.sign(
-            { user: newUser._id },
+            { user: newUser.username },
             process.env.JWT_TOKEN_KEY,
             { expiresIn: `${process.env.JWT_EXPIRES_IN}` } // Token will expire in 1 hour
         );
@@ -68,13 +68,13 @@ exports.login = async (req, res) => {
         // Create a JSON Web Token (JWT) for authentication
 
         const token = jwt.sign(
-            { user: user ? user._id : userEmail._id},
+            { user: user ? user.username : userEmail.username},
             process.env.JWT_TOKEN_KEY,
             { expiresIn: `${process.env.JWT_EXPIRES_IN}` } // Token will expire in 1 hour
         );
 
         if (user){
-            res.json({ token, user: { id: user._id, name: user.name, username: user.username, email: user.email } });
+            res.json({ token, user: { id: user.username, name: user.name, username: user.username, email: user.email } });
         }
         else if(userEmail){
             res.json({ token, user: { id: userEmail._id, name: userEmail.name, username:userEmail.username, email: userEmail.email } });
@@ -87,7 +87,15 @@ exports.login = async (req, res) => {
 //CheckAuth
 exports.checkAuth = async (req, res) => {
     //Check token
-    const token = req.body.token || req.query.token || req.headers["Authorization"];
+    const tokenGet = req.headers["authorization"]; // Note the lowercase "authorization"
+
+    if (!tokenGet) {
+        return res.status(403).send("A token is required for authentication");
+    }
+
+    // Split the "Authorization" header to get the token part after "Bearer "
+    const token = tokenGet.split(" ")[1];
+    console.log(token)
     try {
         const decoded = jwt.verify(token, process.env.JWT_TOKEN_KEY);
         req.user = decoded;

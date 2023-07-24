@@ -3,7 +3,8 @@ const usersController = require("../controllers/user");
 const { verifyToken } = require("../middleware/auth");
 
 users.get("/", usersController.getAllUsers);
-users.get("/:username", usersController.getUserById);
+users.get("/user/private", verifyToken, usersController.getUserByIdPrivate);
+users.get("/:username", verifyToken, usersController.getUserById);
 users.put("/:username", verifyToken, usersController.updateUser);
 users.delete("/:username", verifyToken, usersController.deleteUser);
 

@@ -20,6 +20,15 @@ exports.getUserById = async (req, res) => {
         res.json({ message: err });
     }
 }
+// Get user by username private
+exports.getUserByIdPrivate = async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.user.user });
+        res.json(user);
+    } catch (err) {
+        res.json({ message: err });
+    }
+}
 
 // Update user
 exports.updateUser = async (req, res) => {
