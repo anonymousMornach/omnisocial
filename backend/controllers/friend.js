@@ -112,3 +112,28 @@ exports.getFriendsOfUser = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
+// Get friends of user with pagination
+exports.getFriendsOfUserPrivate = async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.user.user }).populate({
+            path: 'friends',
+            select: 'name username profilePicture age email posts',
+            populate: { path: 'posts', select: 'content createdAt' } // Populate the posts field for each friend
+        });
+
+        const friends = user.friends.map(friend => ({
+            name: friend.name,
+            username: friend.username,
+            profilePicture: friend.profilePicture,
+            age: friend.age,
+            email: friend.email,
+            posts: friend.posts // This will be an array of post objects with content and createdAt fields
+        }));
+
+        res.json(friends);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+

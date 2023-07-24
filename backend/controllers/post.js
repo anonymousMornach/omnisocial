@@ -4,7 +4,7 @@ const User = require("../schema/User");
 // Get all posts
 exports.getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find();
+        const posts = await Post.find().sort({ createdAt: -1 }).populate('user', 'name username'); // Populate the 'user' field with 'name' and 'username'
         res.json(posts);
     } catch (err) {
         res.json({ message: err });
@@ -20,7 +20,7 @@ exports.getPostsByUser = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const posts = await Post.find({ user: user._id });
+        const posts = await Post.find({ user: user._id }).sort({ createdAt: -1 }).populate('user', 'name username'); // Populate the 'user' field with 'name' and 'username'
         res.json(posts);
     } catch (err) {
         res.json({ message: err });
@@ -75,7 +75,8 @@ exports.updatePosts = async (req, res) => {
                 }
             },
             { new: true } // To return the updated post
-        );
+        ).populate('user', 'name username'); // Populate the 'user' field with 'name' and 'username'
+
         res.json(updatedPost);
     } catch (err) {
         res.json({ message: err });

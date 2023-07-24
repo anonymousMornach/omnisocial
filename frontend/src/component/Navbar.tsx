@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import {red} from "@mui/material/colors";
 
 const pages = ['Feed', 'People', 'Chat'];
 const settings = ['Profile', 'Settings', 'Logout'];
@@ -129,6 +130,8 @@ function Navbar(props:any) {
                             <Button
                                 key={page}
                                 onClick={handleCloseNavMenu}
+                                component="a"
+                                href={`/${page.toLowerCase()}`}
                                 sx={{ my: 2, color: 'white', display: 'block' }}
                             >
                                 {page}
@@ -139,8 +142,25 @@ function Navbar(props:any) {
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src= {props.user ? props.user.profilePic : "/static/images/avatar/2.jpg"} />
-                            </IconButton>
+                                {
+                                    !props.user ? (
+                                        <Avatar
+                                            alt={props.user ? props.user.name : "user"}
+                                            src={props.user ? props.user.profilePic : "/static/images/avatar/1.jpg"}
+                                        >
+                                        </Avatar>
+                                    ):(
+                                        !props.user.profilePic ? (
+                                            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                                                {props.user.username.charAt(0)} {/* Display the first character of the user's name */}
+                                            </Avatar>
+                                        ):(
+                                            <Avatar
+                                                alt={props.user ? props.user.name : "user"}
+                                                src={props.user ? props.user.profilePic : "/static/images/avatar/1.jpg"}
+                                            />)
+                                    )
+                                }                            </IconButton>
                         </Tooltip>
                         <Menu
                             sx={{ mt: '45px' }}

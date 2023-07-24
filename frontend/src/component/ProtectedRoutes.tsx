@@ -16,6 +16,7 @@ export default function ProtectedRoutes({ component: Component, ...rest }:any) {
                         "Authorization": `${token}`
                     }
                 })
+                console.log(data)
                 if (data.success) {
                     setRedirectToLogin(false);
                     console.log(data)
