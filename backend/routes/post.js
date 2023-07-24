@@ -4,7 +4,7 @@ const {verifyToken} = require("../middleware/auth");
 
 posts.get("/", verifyToken, postsController.getAllPosts);
 posts.get("/:postId", postsController.getPostsByUser);
-posts.post("/", postsController.addPost);
+posts.post("/", verifyToken, postsController.addPost);
 posts.put("/:postId", postsController.updatePosts);
 posts.delete("/:postId", postsController.deletePosts);
 

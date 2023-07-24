@@ -18,7 +18,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ListItemText from "@mui/material/ListItemText";
 import { format } from "date-fns";
 import { red } from '@mui/material/colors';
-import { Button, CardActionArea, Pagination } from '@mui/material';
+import {Pagination } from '@mui/material';
+import CreatePost from './CreatePost'
 
 // Function to get a random color for a user from the list of colors
 const getRandomColor = (userId:any) => {
@@ -90,29 +91,7 @@ export default function CenterMain(props: any) {
 
     return (
         <>
-            <Card sx={{ maxWidth: 345 }} style={{margin:"auto"}}>
-                <CardActionArea>
-                    <CardMedia
-                        component="img"
-                        height="140"
-                        image={(user && user.profilePic) ? user.profilePic : "https://source.unsplash.com/featured"}
-                        alt={user ? user.name : "user"}
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            Hi {user ? user.username : "user"}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Gist us ☺️
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-                <CardActions>
-                    <Button size="small" color="primary">
-                        Create Post
-                    </Button>
-                </CardActions>
-            </Card>
+            <CreatePost user={user}/>
             <List>
                 {currentPosts && currentPosts.length > 0 ? (
                     currentPosts.map((post: any) => (
@@ -157,7 +136,6 @@ export default function CenterMain(props: any) {
                                 </CardActions>
                                 <Collapse in={expandedMap[post._id] || false} timeout="auto" unmountOnExit>
                                     <CardContent>
-                                        <Typography paragraph>Method:</Typography>
                                         <Typography paragraph>
                                             {post.body}
                                         </Typography>

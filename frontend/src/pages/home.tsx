@@ -57,7 +57,6 @@ export default function Home() {
 
         axios(config).then((result)=>{
             setFriends(result.data);
-            console.log(result.data);
         }).catch((err)=>{
             err = new Error()
         })
@@ -91,7 +90,6 @@ export default function Home() {
 
         axios(config).then((result)=>{
             setPosts(result.data);
-            console.log(result);
         }).catch((err)=>{
             err = new Error()
         })

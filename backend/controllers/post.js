@@ -30,7 +30,7 @@ exports.getPostsByUser = async (req, res) => {
 // Add post
 exports.addPost = async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.body.username });
+        const user = await User.findOne({ username: req.user.user });
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
