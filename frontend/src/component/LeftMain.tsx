@@ -12,7 +12,7 @@ import { red } from '@mui/material/colors';
 export default function LeftMain(props:any) {
     return(
         <>
-            <List>
+            <List  sx={{ display: { xs: 'none' , sm: 'block'} }}>
                 <ListItem
                     alignItems="flex-start"
                     component={'a'}
@@ -23,18 +23,18 @@ export default function LeftMain(props:any) {
                             !props.user ? (
                                     <Avatar
                                         alt={props.user ? props.user.name : "user"}
-                                        src={props.user ? props.user.profilePic : "/static/images/avatar/1.jpg"}
+                                        src={props.user ? props.user.profilePicture : "/static/images/avatar/1.jpg"}
                                     >
                                     </Avatar>
                             ):(
-                                !props.user.profilePic ? (
+                                !props.user.profilePicture ? (
                                     <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
                                         {props.user.username.charAt(0)} {/* Display the first character of the user's name */}
                                     </Avatar>
                                 ):(
                                     <Avatar
                                         alt={props.user ? props.user.name : "user"}
-                                        src={props.user ? props.user.profilePic : "/static/images/avatar/1.jpg"}
+                                        src={props.user ? props.user.profilePicture : "/static/images/avatar/1.jpg"}
                                     />)
                             )
                         }

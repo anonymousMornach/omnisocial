@@ -4,7 +4,7 @@ const User = require("../schema/User");
 // Get all posts
 exports.getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1 }).populate('user', 'name username'); // Populate the 'user' field with 'name' and 'username'
+        const posts = await Post.find().sort({ createdAt: -1 }).populate('user', 'name username profilePicture'); // Populate the 'user' field with 'name' and 'username'
         res.json(posts);
     } catch (err) {
         res.json({ message: err });

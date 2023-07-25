@@ -13,23 +13,18 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import {red} from "@mui/material/colors";
+import { TextField } from '@mui/material';
+import { Autocomplete } from '@mui/material';
 
 const pages = ['Feed', 'People', 'Chat'];
 const settings = ['Profile', 'Settings', 'Logout'];
 
 function Navbar(props:any) {
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+    console.log(props)
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElNav(event.currentTarget);
-    };
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
     };
 
     const handleCloseUserMenu = () => {
@@ -38,8 +33,12 @@ function Navbar(props:any) {
 
     return (
         <AppBar position="static" sx={{
-            backgroundColor:'#000'
-        }}>
+            height: 90,
+            backgroundColor:'',
+            padding: 1
+        }}
+        style={{}}
+        >
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -60,52 +59,6 @@ function Navbar(props:any) {
                     >
                         OmniSocial
                     </Typography>
-
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleOpenNavMenu}
-                            color="inherit"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
-                            sx={{
-                                display: { xs: 'block', md: 'none' },
-                            }}
-                        >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography
-                                        component="a"
-                                        href={`/${page.toLowerCase()}`}
-                                        sx={{
-                                            color: 'inherit',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        {page}
-                                    </Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
                     <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                     <Typography
                         variant="h5"
@@ -114,7 +67,7 @@ function Navbar(props:any) {
                         href="/"
                         sx={{
                             mr: 2,
-                            display: { xs: 'flex', md: 'none' },
+                            display: { xs: 'none', md: 'none' },
                             flexGrow: 1,
                             fontFamily: 'monospace',
                             fontWeight: 700,
@@ -125,19 +78,44 @@ function Navbar(props:any) {
                     >
                         OmniSocial
                     </Typography>
+
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                component="a"
-                                href={`/${page.toLowerCase()}`}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
-                            >
-                                {page}
-                            </Button>
-                        ))}
+                        <Autocomplete
+                            sx={{ width: 300,  backgroundColor:'white' }}
+                            freeSolo
+                            id="free-solo-2-demo"
+                            disableClearable
+                            options={props.allUsers.map((option:any) => option.username)}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Search Omni"
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                    }}
+                                />
+                            )}
+                        />
                     </Box>
+                        <Autocomplete
+                            sx={{  backgroundColor:'white', flexGrow: 1, display: { xs: 'flex', md: 'none' }}}
+                            freeSolo
+                            id="free-solo-2-demo"
+                            disableClearable
+                            options={props.allUsers.map((option:any) => option.username)}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Search Omni"
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                    }}
+                                />
+                            )}
+                        />
+
 
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
@@ -146,21 +124,22 @@ function Navbar(props:any) {
                                     !props.user ? (
                                         <Avatar
                                             alt={props.user ? props.user.name : "user"}
-                                            src={props.user ? props.user.profilePic : "/static/images/avatar/1.jpg"}
+                                            src={props.user ? props.user.profilePicture : "/static/images/avatar/1.jpg"}
                                         >
                                         </Avatar>
                                     ):(
-                                        !props.user.profilePic ? (
+                                        !props.user.profilePicture ? (
                                             <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
                                                 {props.user.username.charAt(0)} {/* Display the first character of the user's name */}
                                             </Avatar>
                                         ):(
                                             <Avatar
                                                 alt={props.user ? props.user.name : "user"}
-                                                src={props.user ? props.user.profilePic : "/static/images/avatar/1.jpg"}
+                                                src={props.user ? props.user.profilePicture : "/static/images/avatar/1.jpg"}
                                             />)
                                     )
-                                }                            </IconButton>
+                                }
+                            </IconButton>
                         </Tooltip>
                         <Menu
                             sx={{ mt: '45px' }}

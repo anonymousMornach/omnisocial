@@ -33,22 +33,29 @@ interface UserAvatarProps {
         _id: string;
         name?: string;
         username: string;
-        profilePic?: string;
+        profilePicture?: string;
     };
 }
 
 const UserAvatar = React.memo(({ user }: UserAvatarProps) => {
-    const avatarSrc = user.profilePic || "/static/images/avatar/1.jpg";
+    const avatarSrc = user.profilePicture || "/static/images/avatar/1.jpg";
     const userColor = getRandomColor(user._id);
 
     return (
-        <Avatar
-            alt={user.name || "user"}
-            src={avatarSrc}
-            sx={{ bgcolor: userColor }}
-        >
-            {user.username.charAt(0)}
-        </Avatar>
+        !user.profilePicture ? (
+            <Avatar
+                alt={user.name || "user"}
+                src={avatarSrc}
+                sx={{ bgcolor: userColor }}
+            >
+                {user.username.charAt(0)}
+            </Avatar>
+        ) : (
+            <Avatar
+                alt={user.name || "user"}
+                src={avatarSrc}
+            />
+        )
     );
 });
 
@@ -109,7 +116,6 @@ export default function CenterMain(props: any) {
                                 />
                                 <CardMedia
                                     component="img"
-                                    height="194"
                                     image={post.image}
                                     alt="Post Image"
                                 />

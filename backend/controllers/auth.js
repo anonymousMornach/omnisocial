@@ -99,7 +99,13 @@ exports.checkAuth = async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_TOKEN_KEY);
         req.user = decoded;
-        res.status(200).send("Valid Token");
+        const user = await User.findOne({ username: req.user.user });
+        if(user){
+            res.status(200).send("Valid Token");
+        }
+        else{
+            res.status(401).send("Invalid Token");
+        }
     } catch (err) {
         return res.status(401).send("Invalid Token");
     }

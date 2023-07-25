@@ -11,6 +11,7 @@ export default function Home() {
     const [posts, setPosts] = useState<any>([]);
     const [user, setUser] = useState<any>(null);
     const [users, setUsers] = useState<any>(null);
+    const [allUsers, setAllUsers] = useState<any>([]);
     const isAuthenticated = cookies.get("TOKEN");
 
     useEffect(() => {
@@ -35,7 +36,7 @@ export default function Home() {
                 Authorization: `Bearer ${isAuthenticated}`, // Assuming the token is a JWT, you may need to adjust the format according to your server's requirements.
             },
             method: 'GET',
-            url: `${process.env.REACT_APP_API}/users/`,
+            url: `${process.env.REACT_APP_API}/friends/nonfriend/private`,
         }
 
         axios(config).then((result)=>{
@@ -62,18 +63,17 @@ export default function Home() {
         })
     }, [])
 
-
     useEffect(() => {
         const config = {
             headers: {
                 Authorization: `Bearer ${isAuthenticated}`, // Assuming the token is a JWT, you may need to adjust the format according to your server's requirements.
             },
             method: 'GET',
-            url: `${process.env.REACT_APP_API}/friends/friend/private`,
+            url: `${process.env.REACT_APP_API}/users/`,
         }
 
         axios(config).then((result)=>{
-            setFriends(result.data);
+            setAllUsers(result.data);
         }).catch((err)=>{
             err = new Error()
         })
@@ -96,7 +96,7 @@ export default function Home() {
     }, [])
     return (
         <>
-            <Navbar user={user}/>
+            <Navbar user={user}  allUsers={allUsers}/>
             <Main user={user} friends={friends} users={users} posts={posts}/>
         </>
     );

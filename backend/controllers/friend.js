@@ -3,8 +3,8 @@ const User = require('../schema/User');
 // Send friend request to user
 exports.sendFriendRequest = async (req, res) => {
     try {
-        const senderUser = await User.findOne({ username: req.params.username });
-        const friendUser = await User.findOne({ username: req.body.friendUsername });
+        const senderUser = await User.findOne({ username: req.user.user });
+        const friendUser = await User.findOne({ username: req.params.username });
 
         if (!senderUser || !friendUser) {
             return res.status(404).json({ message: 'User not found' });
@@ -137,3 +137,26 @@ exports.getFriendsOfUserPrivate = async (req, res) => {
     }
 };
 
+// Get all users other than the user's friends (excluding the user himself)
+exports.getAllNonFriendUsers = async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.user.user }).populate('friends', 'username');
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const friendsUsernames = user.friends.map(friend => friend.username);
+
+        // Add the user's own username to the friendsUsernames array
+        friendsUsernames.push(user.username);
+
+        const nonFriendUsers = await User.find({ username: { $nin: friendsUsernames } });
+
+        // Remove the user himself from the list of non-friend users
+        const filteredNonFriendUsers = nonFriendUsers.filter(nonFriend => nonFriend.username !== user.username);
+
+        res.json(filteredNonFriendUsers);
+    } catch (err) {
+        res.json({ message: err });
+    }
+}

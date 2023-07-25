@@ -9,6 +9,7 @@ friends.delete("/:username/reject",verifyToken, friendsController.removeFriendRe
 friends.post("/:username/request",verifyToken, friendsController.sendFriendRequest);
 friends.get("/:username/", friendsController.getFriendsOfUser);
 friends.get("/friend/private",verifyToken, friendsController.getFriendsOfUserPrivate);
+friends.get("/nonfriend/private",verifyToken, friendsController.getAllNonFriendUsers);
 
 
 module.exports = friends;
