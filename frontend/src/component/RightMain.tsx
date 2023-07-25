@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
@@ -7,18 +7,30 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import { red } from '@mui/material/colors';
-import { Button } from '@mui/material';
+import {Button, Modal} from '@mui/material';
 import axios from 'axios';
 import Cookies from "universal-cookie";
+import Box from "@mui/material/Box";
 const cookies = new Cookies();
 
 export default function RightMain(props: any) {
     const { users, friends } = props;
+    const [error, setError] = useState<any>({});
+    const [sucessRequest, setSuccessRequest] = useState(false)
+    const [failureRequest, setFailureRequest] = useState(false)
+    function handleSuccessClose(){
+        setSuccessRequest(false)
+    }
+    function handleFailureClose() {
+        setFailureRequest(false);
+    }
+
+
 
     const sendFriendRequest = async (username: any) => {
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_API}/${username}/request`,
+                `${process.env.REACT_APP_API}/friends/${username}/request`,
                 {},
                 {
                     headers: {
@@ -28,9 +40,12 @@ export default function RightMain(props: any) {
             );
 
             // You can do something with the response if needed
-            console.log('Response:', response.data);
-        } catch (err) {
-            console.error(err);
+            setSuccessRequest(true)
+            window.setTimeout(handleSuccessClose, 1000)
+        } catch (err:any) {
+            setFailureRequest(true)
+            setError(err.response)
+            window.setTimeout(handleFailureClose, 1000)
         }
     };
 
@@ -103,8 +118,6 @@ export default function RightMain(props: any) {
                             <React.Fragment key={index}>
                                 <ListItem
                                     alignItems="flex-start"
-                                    component="a"
-                                    href="/user"
                                 >
                                     <ListItemAvatar>
                                         {!user ? (
@@ -156,6 +169,54 @@ export default function RightMain(props: any) {
                         </ListItem>
                     )}
                 </List>
+                <Modal
+                    open={sucessRequest}
+                    onClose={handleSuccessClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Box sx={{
+                        backgroundColor: '#fff',
+                        boxShadow: 24,
+                        p: 4,
+                        borderRadius: 4,
+                        minWidth: 300,
+                        textAlign: 'center',
+                    }}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Friend Request Sent
+                        </Typography>
+                    </Box>
+                </Modal>
+                <Modal
+                    open={failureRequest}
+                    onClose={handleFailureClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Box sx={{
+                        backgroundColor: '#fff',
+                        boxShadow: 24,
+                        p: 4,
+                        borderRadius: 4,
+                        minWidth: 300,
+                        textAlign: 'center',
+                    }}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            {error.data ? error.data.message : "The server has a problem" }
+                        </Typography>
+                    </Box>
+                </Modal>
             </div>
         </>
     );

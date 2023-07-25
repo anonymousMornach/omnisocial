@@ -20,7 +20,6 @@ const pages = ['Feed', 'People', 'Chat'];
 const settings = ['Profile', 'Settings', 'Logout'];
 
 function Navbar(props:any) {
-    console.log(props)
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
