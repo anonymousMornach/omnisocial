@@ -123,6 +123,7 @@ exports.getFriendsOfUserPrivate = async (req, res) => {
         });
 
         const friends = user.friends.map(friend => ({
+            _id: friend._id,
             name: friend.name,
             username: friend.username,
             profilePicture: friend.profilePicture,

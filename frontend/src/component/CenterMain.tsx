@@ -114,11 +114,37 @@ export default function CenterMain(props: any) {
                                     title={post.user.username}
                                     subheader={format(new Date(post.createdAt), "yyyy-MM-dd HH:mm:ss")}
                                 />
-                                <CardMedia
-                                    component="img"
-                                    image={post.image}
-                                    alt="Post Image"
-                                />
+                                {
+                                    (
+                                        ()=>{
+                                            if(post.image){
+                                                return(
+                                                    <CardMedia
+                                                        component="img"
+                                                        image={post.image}
+                                                        alt="Post Image"
+                                                    />
+                                                )
+                                            }
+                                            else if(post.video){
+                                                return(
+                                                    <CardMedia
+                                                        component="img"
+                                                        image={post.video}
+                                                        alt="Post Video"
+                                                    />
+                                                )
+                                            }
+                                            else{
+                                                return (
+                                                    <>
+                                                    </>
+                                                )
+                                            }
+                                        }
+                                    )()
+                                }
+
                                 <CardContent>
                                     <Typography variant="body2" color="text.secondary">
                                         {post.title}

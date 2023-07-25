@@ -45,7 +45,10 @@ exports.addPost = async (req, res) => {
         });
 
         const savedPost = await post.save();
-        res.json(savedPost);
+
+        // Populate the 'user' field with 'name', 'username', and 'profilePicture'
+        const populatedPost = await Post.find({_id : savedPost._id}).populate('user', 'name username profilePicture'); // Populate the 'user' field with 'name' and 'username'
+        res.json(populatedPost[0]);
     } catch (err) {
         res.json({ message: err });
     }

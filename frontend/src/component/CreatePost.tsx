@@ -12,7 +12,9 @@ import Fade from '@mui/material/Fade';
 import TextField from '@mui/material/TextField';
 import axios, { AxiosResponse } from 'axios';
 import Cookies from "universal-cookie";
+import { socket } from '../socket';
 const cookies = new Cookies();
+
 
 const MAX_BODY_LENGTH = 1200;
 
@@ -88,15 +90,12 @@ export default function CreatePost(props: CreatePostProps) {
             }
             formDataApi.title = title;
             formDataApi.body = body;
-            console.log(formDataApi);
-
             const response: AxiosResponse = await axios.post((`${process.env.REACT_APP_API}/posts`), formDataApi, {
                 headers: {
                     Authorization: `Bearer ${cookies.get("TOKEN")}`
                 },
             });
-
-            console.log(response);
+            socket.emit("new_post", response.data);
             setResponse(response.status === 200 ? "Post Created Successfully" : "Server Error"); // Assuming the response contains a message from the server.
             setResponseModalOpen(true);
             window.setTimeout(() => {
@@ -185,6 +184,7 @@ export default function CreatePost(props: CreatePostProps) {
             </Modal>
 
             {/* Response Modal */}
+
             <Modal
                 aria-labelledby="response-modal-title"
                 aria-describedby="response-modal-description"
@@ -197,9 +197,21 @@ export default function CreatePost(props: CreatePostProps) {
                         timeout: 500,
                     },
                 }}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
             >
                 <Fade in={responseModalOpen}>
-                    <Box sx={style}>
+                    <Box sx={{
+                        backgroundColor: '#fff',
+                        boxShadow: 24,
+                        p: 4,
+                        borderRadius: 4,
+                        minWidth: 300,
+                        textAlign: 'center'
+                    }}>
                         <Typography variant="h6" component="h2" id="response-modal-title">
                             {response}
                         </Typography>
