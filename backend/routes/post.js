@@ -7,5 +7,6 @@ posts.get("/:postId", postsController.getPostsByUser);
 posts.post("/", verifyToken, postsController.addPost);
 posts.put("/:postId", postsController.updatePosts);
 posts.delete("/:postId", postsController.deletePosts);
+posts.post('/:postId/love',verifyToken, postsController.lovePost);
 
 module.exports = posts;

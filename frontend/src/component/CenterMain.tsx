@@ -20,6 +20,10 @@ import { format } from "date-fns";
 import { red } from '@mui/material/colors';
 import {Pagination } from '@mui/material';
 import CreatePost from './CreatePost'
+import axios from "axios";
+import Cookies from "universal-cookie";
+import {socket} from "../socket";
+const cookies = new Cookies()
 
 // Function to get a random color for a user from the list of colors
 const getRandomColor = (userId:any) => {
@@ -86,6 +90,23 @@ export default function CenterMain(props: any) {
         }));
     };
 
+    async function lovePost(postId: any) {
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API}/posts/${postId}/love`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${cookies.get("TOKEN")}`,
+                    },
+                }
+            );
+            socket.emit("love_post", response.data);
+        } catch (err) {
+            console.error("Error while loving the post:", err);
+        }
+    }
+
     const { posts, user } = props;
 
     // Get current posts based on pagination
@@ -151,9 +172,16 @@ export default function CenterMain(props: any) {
                                     </Typography>
                                 </CardContent>
                                 <CardActions disableSpacing>
-                                    <IconButton aria-label="add to favorites">
+                                    <IconButton
+                                        aria-label="add to favorites"
+                                        onClick={() => lovePost(post._id)}
+                                        // Check if the post is loved by the user and change the color accordingly
+                                        style={{ color: post.loves && post.loves.includes(user._id) ? "red" : "inherit" }}
+                                    >
                                         <FavoriteIcon />
+                                        {post.loves ? post.loves.length : 0}
                                     </IconButton>
+
                                     <IconButton aria-label="share">
                                         <ShareIcon />
                                     </IconButton>

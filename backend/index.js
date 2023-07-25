@@ -50,6 +50,10 @@ io.on('connection', (socket) => {
         socket.emit('new_user', data);
         socket.broadcast.emit('new_user', data);
     })
+    socket.on('love_post', async (data) => {
+        socket.emit('love_post', data);
+        socket.broadcast.emit('love_post', data);
+    })
 
     socket.broadcast.emit('connected', "Great");
 });

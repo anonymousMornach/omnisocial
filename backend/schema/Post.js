@@ -5,6 +5,7 @@ const postSchema = new mongoose.Schema({
     body: String,
     image: String,
     video: String,
+    loves: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     reactions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reaction' }],
     createdAt: { type: Date, default: Date.now } // Add createdAt field

@@ -85,3 +85,29 @@ exports.updatePosts = async (req, res) => {
         res.json({ message: err });
     }
 }
+
+exports.lovePost = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.postId);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+        const user = await User.find({username :req.user.user}); // Assuming you have authenticated the user and stored their data in req.user.user
+        // Check if the user already loved the post
+        if (post.loves.includes(user[0]._id)) {
+            // User already loved the post, so remove their ID from the 'loves' array
+            post.loves.pull(user[0]._id);
+        } else {
+            post.loves.push(user[0]._id);
+        }
+        console.log(post)
+
+        // Save the post with the updated 'loves' array
+        await post.save();
+
+        // Return the updated post
+        res.status(200).json(post);
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+};

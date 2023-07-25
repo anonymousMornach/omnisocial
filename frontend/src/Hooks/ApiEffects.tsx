@@ -107,6 +107,19 @@ export default function ApiEffects(props:any){
             setPosts(updatedPosts);
         };
 
+        const handleLovePost = (data:any)=>{
+            setPosts((prevPosts: { _id: any; }[]) => {
+                return prevPosts.map((post: { _id: any; }) => {
+                    if (post._id === data._id) {
+                        return {
+                            ...post,
+                            loves: data.loves,
+                        };
+                    }
+                    return post;
+                });
+            });
+        }
         const handleNewUser = (data:any)=>{
             const updatedUsers = [data, ...users];
             const updatedAllUsers = [data, ...allUsers];
@@ -116,6 +129,8 @@ export default function ApiEffects(props:any){
         }
         socket.on('new_post', handleNewPost)
         socket.on('new_user', handleNewUser)
+        socket.on('love_post', handleLovePost)
+
     }, [posts]);
 
     return(
