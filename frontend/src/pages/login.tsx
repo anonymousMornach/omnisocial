@@ -13,9 +13,9 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import { Modal } from "@mui/material";
+import {CircularProgress, Modal } from "@mui/material";
 import Cookies from "universal-cookie";
-import {useState} from "react";
+import { useState } from "react";
 const cookies = new Cookies();
 
 function Copyright(props: any) {
@@ -39,6 +39,7 @@ export default function Login() {
     const [loginFail, setLoginFail] = useState(false);
     const [user, setUser] = useState<any>({});
     const [error, setError] = useState<any>({});
+    const [loading, setLoading] = useState(false); // New state for loading
 
     const handleSuccessModalOpen = () => {
         setLoginSuccess(true);
@@ -55,24 +56,50 @@ export default function Login() {
     const handleFailModalClose = () => {
         setLoginFail(false);
     };
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setLoading(true); // Start loading animation when form is submitted
+
         const data = new FormData(event.currentTarget);
-        try{
-            const response = await axios.post(`${process.env.REACT_APP_API}/auth/login`, { email: data.get('email'),
-                password: data.get('password'),})
+        const email = data.get('email') as string;
+        const password = data.get('password') as string;
+
+        if (!email || !password) {
+            // If email or password is missing, show an error message
+            handleFailModalOpen();
+            setError({ data: { message: 'Please enter both email and password.' } });
+            setLoading(false); // Stop loading animation
+            return;
+        }
+
+        if (password.length < 8) {
+            // If password is less than 8 characters, show an error message
+            handleFailModalOpen();
+            setError({ data: { message: 'Password must be at least 8 characters long.' } });
+            setLoading(false); // Stop loading animation
+            return;
+        }
+
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API}/auth/login`, {
+                email: data.get('email'),
+                password: data.get('password'),
+            });
             cookies.set("TOKEN", response.data.token, {
                 path: "/",
-            })
-            console.log(response.data.token)
-            setUser(response.data)
-            handleSuccessModalOpen();// Show the modal on successful registration
-            window.setTimeout(()=>{
-                window.location.href = "/"
-            }, 500)
-        }catch (err :any) {
+            });
+            console.log(response.data.token);
+            setUser(response.data);
+            handleSuccessModalOpen(); // Show the modal on successful registration
+            window.setTimeout(() => {
+                window.location.href = "/";
+            }, 500);
+        } catch (err: any) {
             handleFailModalOpen();
-            setError(err.response)
+            setError(err.response);
+        } finally {
+            setLoading(false); // Stop loading animation when API call is complete (success or fail)
         }
     };
 
@@ -164,53 +191,57 @@ export default function Login() {
                                 </Typography>
                             </Box>
                         </Modal>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                autoFocus
-                            />
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                            />
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                            />
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Sign In
-                            </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link href="#" variant="body2">
-                                        Forgot password?
-                                    </Link>
+                        {loading ? (
+                            <CircularProgress size={48} color="primary" />
+                        ) : (
+                            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    autoFocus
+                                />
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="current-password"
+                                />
+                                <FormControlLabel
+                                    control={<Checkbox value="remember" color="primary" />}
+                                    label="Remember me"
+                                />
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    Sign In
+                                </Button>
+                                <Grid container>
+                                    <Grid item xs>
+                                        <Link href="#" variant="body2">
+                                            Forgot password?
+                                        </Link>
+                                    </Grid>
+                                    <Grid item>
+                                        <Link href="/register" variant="body2">
+                                            {"Don't have an account? Sign Up"}
+                                        </Link>
+                                    </Grid>
                                 </Grid>
-                                <Grid item>
-                                    <Link href="/register" variant="body2">
-                                        {"Don't have an account? Sign Up"}
-                                    </Link>
-                                </Grid>
-                            </Grid>
-                            <Copyright sx={{ mt: 5 }} />
-                        </Box>
+                                <Copyright sx={{ mt: 5 }} />
+                            </Box>
+                        )}
                     </Box>
                 </Grid>
             </Grid>

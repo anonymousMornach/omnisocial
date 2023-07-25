@@ -15,8 +15,8 @@ import Cookies from "universal-cookie";
 import { socket } from '../socket';
 const cookies = new Cookies();
 
-
 const MAX_BODY_LENGTH = 1200;
+const MAX_TITLE_LENGTH = 50;
 
 interface User {
     username: string;
@@ -31,14 +31,15 @@ interface CreatePostProps {
 export default function CreatePost(props: CreatePostProps) {
     const { user } = props;
 
-    const style :any = {
+    const style: any = {
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 400,
+        minWidth: 300,
         bgcolor: 'background.paper',
         border: '2px solid #000',
+        borderRadius:"20px",
         boxShadow: 24,
         p: 4,
     };
@@ -50,6 +51,7 @@ export default function CreatePost(props: CreatePostProps) {
     const [file, setFile] = useState<File | null>(null);
     const [responseModalOpen, setResponseModalOpen] = useState(false);
     const [response, setResponse] = useState<string>('');
+    const [loading, setLoading] = useState(false);
 
     const handleResponseModalClose = () => setResponseModalOpen(false);
 
@@ -66,8 +68,25 @@ export default function CreatePost(props: CreatePostProps) {
         setFile(selectedFile || null);
     };
 
+    const isFileValid = (file: File | null): boolean => {
+        if (!file) return false;
+        const acceptedTypes = ["image/jpeg", "image/png", "video/mp4"];
+        return acceptedTypes.includes(file.type);
+    };
+
+    const bodyCharacterCount = MAX_BODY_LENGTH - body.length;
+    const titleCharacterCount = MAX_TITLE_LENGTH - title.length;
+
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        if (!isFileValid(file)) {
+            setResponse("Please select a valid image or video file.");
+            setResponseModalOpen(true);
+            return;
+        }
+
+        setLoading(true); // Start loading animation
+
         try {
             const formDataApi = {
                 image: undefined as string | undefined,
@@ -76,11 +95,10 @@ export default function CreatePost(props: CreatePostProps) {
                 body: undefined as string | undefined
             };
             const formDataCloud = new FormData();
-            formDataCloud.append('upload_preset', `${process.env.REACT_APP_API_CLOUDINARY_UPLOAD_PRESET}`); // Replace with your actual preset value
-            formDataCloud.append('file', file || ''); // Replace with your actual file
-            const responseCloud = await axios.post(`${process.env.REACT_APP_API_CLOUDINARY_URL}`, formDataCloud); // Replace with your actual cloudinary URL
+            formDataCloud.append('upload_preset', `${process.env.REACT_APP_API_CLOUDINARY_UPLOAD_PRESET}`);
+            formDataCloud.append('file', file || '');
+            const responseCloud = await axios.post(`${process.env.REACT_APP_API_CLOUDINARY_URL}`, formDataCloud);
             if (file) {
-                // Check the file type here
                 if (file.type.includes('image')) {
                     formDataApi.image = `${responseCloud.data.secure_url}`;
                 }
@@ -92,24 +110,25 @@ export default function CreatePost(props: CreatePostProps) {
             formDataApi.body = body;
             const response: AxiosResponse = await axios.post((`${process.env.REACT_APP_API}/posts`), formDataApi, {
                 headers: {
-                    Authorization: `Bearer ${cookies.get("TOKEN")}`
+                    Authorization: `Bearer ${cookies.get("TOKEN")}`,
                 },
             });
             socket.emit("new_post", response.data);
-            setResponse(response.status === 200 ? "Post Created Successfully" : "Server Error"); // Assuming the response contains a message from the server.
+            setResponse(response.status === 200 ? "Post Created Successfully" : "Server Error");
             setResponseModalOpen(true);
             window.setTimeout(() => {
                 handleClose();
                 handleResponseModalClose()
             }, 500);
         } catch (error) {
-            // Handle error
             console.error(error);
             setResponse("An error occurred while creating the post");
             setResponseModalOpen(true);
             window.setTimeout(() => {
                 handleResponseModalClose()
             }, 500);
+        } finally {
+            setLoading(false); // Stop loading animation when API call is complete (success or fail)
         }
     };
 
@@ -163,7 +182,11 @@ export default function CreatePost(props: CreatePostProps) {
                             fullWidth
                             margin="normal"
                             variant="outlined"
+                            inputProps={{ maxLength: MAX_TITLE_LENGTH }}
                         />
+                        <Typography variant="body2" color="text.secondary">
+                            Characters left: {titleCharacterCount}
+                        </Typography>
                         <TextField
                             label="Body"
                             value={body}
@@ -175,16 +198,53 @@ export default function CreatePost(props: CreatePostProps) {
                             variant="outlined"
                             inputProps={{ maxLength: MAX_BODY_LENGTH }}
                         />
-                        <input required type="file" accept="image/*,video/*" onChange={handleFileChange} />
-                        <Button variant="contained" color="primary" onClick={handleSubmit}>
-                            Submit
+                        <Typography variant="body2" color="text.secondary">
+                            Characters left: {bodyCharacterCount}
+                        </Typography>
+                        <input
+                            required
+                            type="file"
+                            accept="image/jpeg, image/png, video/mp4"
+                            onChange={handleFileChange}
+                            style={{ display: "none" }}
+                            id="file-input"
+                        />
+                        <label htmlFor="file-input">
+                            <Button
+                                variant="contained"
+                                component="span"
+                                color="primary"
+                                sx={{
+                                    mt: 2,
+                                    py: 1,
+                                    px: 2,
+                                    fontWeight: "bold",
+                                    fontSize: "1rem",
+                                    borderRadius: "20px",
+                                    cursor: "pointer",
+                                    textTransform: "none",
+                                }}
+                            >
+                                Select File
+                            </Button>
+                        </label>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleSubmit}
+                            disabled={loading} // Disable the button when loading is true
+                             sx={{
+                                 width: '90%',
+                                 display: { xs: 'block' },
+                                 margin:'auto',
+                                 marginTop: 2,
+                             }}
+                        >
+                            {loading ? "Sending..." : "Submit"}
                         </Button>
                     </Box>
                 </Fade>
             </Modal>
-
-            {/* Response Modal */}
-
             <Modal
                 aria-labelledby="response-modal-title"
                 aria-describedby="response-modal-description"

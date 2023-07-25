@@ -46,6 +46,10 @@ io.on('connection', (socket) => {
         socket.emit('new_post', data);
         socket.broadcast.emit('new_post', data);
     })
+    socket.on('new_user', (data)=>{
+        socket.emit('new_user', data);
+        socket.broadcast.emit('new_user', data);
+    })
 
     socket.broadcast.emit('connected', "Great");
 });

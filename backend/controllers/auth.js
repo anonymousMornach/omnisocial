@@ -36,7 +36,7 @@ exports.register = async (req, res) => {
             { expiresIn: `${process.env.JWT_EXPIRES_IN}` } // Token will expire in 1 hour
         );
 
-        res.json({ token, user: { id: newUser._id, name: newUser.name, username: newUser.username, email: newUser.email } });
+        res.json({ token, newUser});
     } catch (err) {
         res.json({ message: err });
     }

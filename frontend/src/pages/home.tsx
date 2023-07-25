@@ -7,12 +7,12 @@ export default function Home() {
     const [friends, setFriends] = useState<any>([]);
     const [posts, setPosts] = useState<any>([]);
     const [user, setUser] = useState<any>(null);
-    const [users, setUsers] = useState<any>(null);
+    const [users, setUsers] = useState<any>([]);
     const [allUsers, setAllUsers] = useState<any>([]);
 
     return (
         <>
-            <ApiEffects setUser={setUser} setFriends={setFriends} setAllUsers={setAllUsers} setPosts={setPosts} setUsers={setUsers} posts={posts}/>
+            <ApiEffects setUser={setUser} setFriends={setFriends} setAllUsers={setAllUsers} setPosts={setPosts} setUsers={setUsers} posts={posts} users={users} allUsers={allUsers}/>
             <Navbar user={user}  allUsers={allUsers}/>
             <Main user={user} friends={friends} users={users} posts={posts}/>
         </>
