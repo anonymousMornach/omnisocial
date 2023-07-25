@@ -30,8 +30,8 @@ exports.sendFriendRequest = async (req, res) => {
 // Accept friend request
 exports.acceptFriendRequest = async (req, res) => {
     try {
-        const user = await User.findOne({ username: req.params.username });
-        const friendUser = await User.findOne({ username: req.body.friendUsername });
+        const user = await User.findOne({ username: req.user.user });
+        const friendUser = await User.findOne({ username: req.params.username });
 
         if (!user || !friendUser) {
             return res.status(404).json({ message: 'User not found' });

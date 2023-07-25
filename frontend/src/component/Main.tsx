@@ -31,7 +31,7 @@ export default function Main(props: any) {
                 </Grid>
                 <Grid  xs={12} md={3}>
                     <div style={{ maxHeight: '100vh', overflowY: 'auto' }}>
-                        <Item><RightMain friends={props.friends} users={props.users} /></Item>
+                        <Item><RightMain friends={props.friends} users={props.users} mainuser={props.user} /></Item>
                     </div>
                 </Grid>
             </Grid>

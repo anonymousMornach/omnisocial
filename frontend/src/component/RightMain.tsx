@@ -14,15 +14,25 @@ import Box from "@mui/material/Box";
 const cookies = new Cookies();
 
 export default function RightMain(props: any) {
-    const { users, friends } = props;
+    const { mainuser, users, friends } = props;
     const [error, setError] = useState<any>({});
     const [sucessRequest, setSuccessRequest] = useState(false)
     const [failureRequest, setFailureRequest] = useState(false)
+    const [sucessAdd, setSuccessAdd] = useState(false)
+    const [failureAdd, setFailureAdd] = useState(false)
     function handleSuccessClose(){
         setSuccessRequest(false)
     }
     function handleFailureClose() {
         setFailureRequest(false);
+    }
+
+
+    function handleSuccessAddClose(){
+        setSuccessAdd(false)
+    }
+    function handleFailureAddClose() {
+        setFailureAdd(false);
     }
 
 
@@ -48,6 +58,29 @@ export default function RightMain(props: any) {
             window.setTimeout(handleFailureClose, 1000)
         }
     };
+
+    const acceptFriendRequest = async (username: any) => {
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API}/friends/${username}/add`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${cookies.get("TOKEN")}`
+                    }
+                }
+            );
+
+            // You can do something with the response if needed
+            setSuccessAdd(true)
+            window.setTimeout(handleSuccessAddClose, 1000)
+        } catch (err:any) {
+            setFailureAdd(true)
+            setError(err.response)
+            window.setTimeout(handleFailureAddClose, 1000)
+        }
+    };
+
 
     return (
         <>
@@ -150,13 +183,42 @@ export default function RightMain(props: any) {
                                                 >
                                                     {user ? user.name : "username"}
                                                 </Typography>
-                                                <Button
-                                                    sx={{ display: 'inline', marginLeft: '4', marginBottom: '4' }}
-                                                    onClick={() => sendFriendRequest(user.username)}
-                                                >
-                                                    Add Friend
-                                                </Button>
+                                                {
+                                                    (() => {
+                                                        if (mainuser.friendRequestReceived.includes(user._id)) {
+                                                            return (
+                                                                <Button
+                                                                    sx={{ display: 'inline', marginLeft: '4', marginBottom: '4' }}
+                                                                    onClick={() => acceptFriendRequest(user.username)}
+                                                                >
+                                                                    Accept Friend Request
+                                                                </Button>
+                                                            );
+                                                        }
+                                                        else if(mainuser.friendRequestSent.includes(user._id)){
+                                                            return (
+                                                                <Button
+                                                                    sx={{ display: 'inline', marginLeft: '4', marginBottom: '4' }}
+                                                                    disabled
+                                                                >
+                                                                    Friend Request sent
+                                                                </Button>
+                                                            )
+                                                        }else {
+                                                            return (
+                                                                <Button
+                                                                    sx={{ display: 'inline', marginLeft: '4', marginBottom: '4' }}
+                                                                    onClick={() => sendFriendRequest(user.username)}
+                                                                >
+                                                                    Send Friend Request
+                                                                </Button>
+                                                            );
+                                                        }
+                                                    })()
+                                                }
+
                                             </React.Fragment>
+
                                         }
                                     />
                                 </ListItem>
@@ -196,6 +258,54 @@ export default function RightMain(props: any) {
                 <Modal
                     open={failureRequest}
                     onClose={handleFailureClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Box sx={{
+                        backgroundColor: '#fff',
+                        boxShadow: 24,
+                        p: 4,
+                        borderRadius: 4,
+                        minWidth: 300,
+                        textAlign: 'center',
+                    }}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            {error.data ? error.data.message : "The server has a problem" }
+                        </Typography>
+                    </Box>
+                </Modal>
+                <Modal
+                    open={sucessAdd}
+                    onClose={handleSuccessAddClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Box sx={{
+                        backgroundColor: '#fff',
+                        boxShadow: 24,
+                        p: 4,
+                        borderRadius: 4,
+                        minWidth: 300,
+                        textAlign: 'center',
+                    }}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Friend Added
+                        </Typography>
+                    </Box>
+                </Modal>
+                <Modal
+                    open={failureAdd}
+                    onClose={handleFailureAddClose}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                     style={{
