@@ -122,29 +122,33 @@ exports.login = async (req, res) => {
 
 //CheckAuth
 exports.checkAuth = async (req, res) => {
-    //Check token
-    const tokenGet = req.headers["authorization"]; // Note the lowercase "authorization"
-
+    const tokenGet = req.headers["authorization"]; // Note the lowercase "authorization"\
+    const user = await User.findOne({username: req.user.user});
     if (!tokenGet) {
         return res.status(403).send("A token is required for authentication");
     }
 
     // Split the "Authorization" header to get the token part after "Bearer "
-    const token = tokenGet.split(" ")[1];
-    console.log(token)
+    const token = tokenGet;
     try {
         const decoded = jwt.verify(token, process.env.JWT_TOKEN_KEY);
         req.user = decoded;
-        const user = await User.findOne({ username: req.user.user });
-        if(user){
-            res.status(200).send("Valid Token");
+        const user = await User.findOne({username: req.user.user});
+        if (user){
+            if(!user) {
+                return res.status(401).send("unverified");
+            }else{
+                return res.status(200).send("verified");
+            }
         }
         else{
-            res.status(401).send("Invalid Token");
+            res.status(401).send("Invalid Token")
         }
     } catch (err) {
         return res.status(401).send("Invalid Token");
     }
+
+    return next();
 }
 
 // Add this function in the auth controller to generate and send the token
@@ -187,7 +191,7 @@ exports.compareToken = async (req, res) => {
         if (user.verificationCode === verificationCode) {
             user.approved = true;
             await user.save();
-            res.status.json({ message: 'Token is valid.' });
+            res.status(200).json({ message: 'Token is valid.' });
         } else {
             res.status(401).json({ message: 'Invalid token.' });
         }

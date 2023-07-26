@@ -1,33 +1,26 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
-const axios = require("axios");
-
-export default function ProtectedRoutes({ component: Component, ...rest }:any) {
+export default function ProtectedRoutes({ component: Component, ...rest }: any) {
     // Check if the user is authenticated (token exists in cookies)
     const isAuthenticated = cookies.get("TOKEN");
     const [redirectToLogin, setRedirectToLogin] = useState(false);
+    const navigate= useNavigate();
 
-    function checkAuth(token:any) {
-        async function check(token:any) {
-            try{
-                const data = await axios.post(`${process.env.REACT_APP_API}/auth/checkauth`, {
-                    headers: {
-                        "Authorization": `${token}`
-                    }
-                })
-                console.log(data)
-                if (data.status == 200) {
-                    setRedirectToLogin(false);
-                    console.log(data)
+    async function checkAuth(token: any) {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API}/auth/`, {}, {
+                headers: {
+                    Authorization: `${token}`
                 }
-                else {
-                    setRedirectToLogin(true);
-                    console.log(data)
-                }
-            }catch (err :any) {
-                setRedirectToLogin(true);
-            }
+            });
+
+            setRedirectToLogin(false);
+
+        } catch (err: any) {
+            setRedirectToLogin(true);
         }
     }
 
@@ -35,21 +28,24 @@ export default function ProtectedRoutes({ component: Component, ...rest }:any) {
         // Check authentication status and set redirectToLogin accordingly
         if (!isAuthenticated) {
             setRedirectToLogin(true);
-        }
-        else{
+        } else {
             checkAuth(isAuthenticated);
         }
     }, [isAuthenticated]);
 
+    // Use the useHistory hook to handle navigation
+    useEffect(() => {
+        if (redirectToLogin) {
+            navigate("/login"); // Redirect to the login page
+        }
+    }, [redirectToLogin, navigate]);
+
     return (
         <>
-            {redirectToLogin ? (
-                // Redirect to the login page with the current location as the "from" state
-                window.location.href = "/login"
-            ) : (
+            {!redirectToLogin ? (
                 // Render the protected component if authenticated
                 <Component {...rest} />
-            )}
+            ) : null}
         </>
     );
 }
