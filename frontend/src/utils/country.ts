@@ -256,8 +256,3 @@ const countryCodes: Record<CountryCode, CountryName> = {
 export function getFullCountryName(countryCode: CountryCode): CountryName | undefined {
     return countryCodes[countryCode];
 }
-
-// Example usage:
-const countryCode = "NG";
-const fullCountryName = getFullCountryName(countryCode);
-console.log(fullCountryName); // Output: "Nigeria"

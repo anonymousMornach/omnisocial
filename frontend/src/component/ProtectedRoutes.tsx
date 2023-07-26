@@ -20,7 +20,8 @@ export default function ProtectedRoutes({ component: Component, ...rest }:any) {
                 if (data.status == 200) {
                     setRedirectToLogin(false);
                     console.log(data)
-                } else {
+                }
+                else {
                     setRedirectToLogin(true);
                     console.log(data)
                 }

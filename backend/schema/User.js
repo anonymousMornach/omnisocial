@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Please enter a password'],
         minlength: [6, 'Minimum password length is 6 characters']
     },
+    approved: Boolean,
+    verificationCode:String,
     friendRequestReceived: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     friendRequestSent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],

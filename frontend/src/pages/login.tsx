@@ -13,9 +13,10 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import {CircularProgress, Modal } from "@mui/material";
+import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Modal } from "@mui/material";
 import Cookies from "universal-cookie";
 import { useState } from "react";
+
 const cookies = new Cookies();
 
 function Copyright(props: any) {
@@ -31,7 +32,6 @@ function Copyright(props: any) {
     );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Login() {
@@ -39,7 +39,21 @@ export default function Login() {
     const [loginFail, setLoginFail] = useState(false);
     const [user, setUser] = useState<any>({});
     const [error, setError] = useState<any>({});
-    const [loading, setLoading] = useState(false); // New state for loading
+    const [loading, setLoading] = useState(false);
+    const [verify, setVerify] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [tokenSent, setTokenSent] = useState(false);
+    const [tokenRecieved, setTokenRecieved] = useState(false);
+    const [tokenRecievedFailed, setTokenRecievedFailed] = useState(false);
+    const [enteredToken, setEnteredToken] = useState("");
+
+    const handleVerifyOpen = () => {
+        setVerify(true);
+    };
+
+    const handleVerifyClose = () => {
+        setVerify(false);
+    };
 
     const handleSuccessModalOpen = () => {
         setLoginSuccess(true);
@@ -57,27 +71,76 @@ export default function Login() {
         setLoginFail(false);
     };
 
+    const sendTokenToEmail = async () => {
+        const auth = cookies.get("TOKEN");
+
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API}/auth/get_token`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${auth}`,
+                    },
+                }
+            );
+            setTokenSent(true);
+            setTimeout(() => {
+                setTokenSent(false)
+            }, 1000);
+        } catch (err) {
+            console.log(err)
+        }
+    };
+
+    const handleTokenSubmit = async (event: any) => {
+        const auth = cookies.get("TOKEN");
+        event.preventDefault();
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API}/auth/verify_token`,
+                {
+                    verificationCode: enteredToken,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${auth}`,
+                    },
+                }
+            );
+            console.log(response)
+            setTokenRecieved(true);
+            setTimeout(() => {
+                setTokenRecieved(false);
+                window.location.href = "/"
+            }, 1000);
+        } catch (err) {
+            setTokenRecievedFailed(true);
+            setTimeout(() => {
+                setTokenRecievedFailed(false);
+            }, 1000);
+        }
+    };
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setLoading(true); // Start loading animation when form is submitted
+        setLoading(true);
 
         const data = new FormData(event.currentTarget);
         const email = data.get('email') as string;
         const password = data.get('password') as string;
 
         if (!email || !password) {
-            // If email or password is missing, show an error message
             handleFailModalOpen();
             setError({ data: { message: 'Please enter both email and password.' } });
-            setLoading(false); // Stop loading animation
+            setLoading(false);
             return;
         }
 
         if (password.length < 8) {
-            // If password is less than 8 characters, show an error message
             handleFailModalOpen();
             setError({ data: { message: 'Password must be at least 8 characters long.' } });
-            setLoading(false); // Stop loading animation
+            setLoading(false);
             return;
         }
 
@@ -89,17 +152,21 @@ export default function Login() {
             cookies.set("TOKEN", response.data.token, {
                 path: "/",
             });
-            console.log(response.data.token);
             setUser(response.data);
-            handleSuccessModalOpen(); // Show the modal on successful registration
-            window.setTimeout(() => {
-                window.location.href = "/";
-            }, 500);
+            if(!response.data.user.approved){
+                handleVerifyOpen()
+            }
+            else{
+                handleSuccessModalOpen();
+                window.setTimeout(() => {
+                    window.location.href = "/";
+                }, 500);
+            }
         } catch (err: any) {
-            handleFailModalOpen();
-            setError(err.response);
+                handleFailModalOpen();
+                setError(err.response);
         } finally {
-            setLoading(false); // Stop loading animation when API call is complete (success or fail)
+            setLoading(false);
         }
     };
 
@@ -148,7 +215,7 @@ export default function Login() {
                                 justifyContent: 'center',
                             }}
                         >
-                            <Box  sx={{
+                            <Box sx={{
                                 backgroundColor: '#fff',
                                 boxShadow: 24,
                                 p: 4,
@@ -157,7 +224,7 @@ export default function Login() {
                                 textAlign: 'center',
                             }}>
                                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                                    Welcome {user.user ? user.user.username : "user"  } Login Successful
+                                    Welcome {user.user ? user.user.username : "user"} Login Successful
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                     Redirecting to homepage
@@ -187,10 +254,106 @@ export default function Login() {
                                     Login Failed
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    {error.data ? error.data.message : "The server has a problem" }
+                                    {error.data ? error.data.message : "The server has a problem"}
                                 </Typography>
                             </Box>
                         </Modal>
+                        <Modal
+                            open={tokenRecieved}
+                            onClose={setTokenRecieved}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Box sx={{
+                                backgroundColor: '#fff',
+                                boxShadow: 24,
+                                p: 4,
+                                borderRadius: 4,
+                                minWidth: 300,
+                                textAlign: 'center',
+                            }}>
+                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    Redirecting to Main Menu
+                                </Typography>
+                            </Box>
+                        </Modal>
+                        <Modal
+                            open={tokenRecievedFailed}
+                            onClose={setTokenRecievedFailed}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Box sx={{
+                                backgroundColor: '#fff',
+                                boxShadow: 24,
+                                p: 4,
+                                borderRadius: 4,
+                                minWidth: 300,
+                                textAlign: 'center',
+                            }}>
+                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    Invalid Verification Code
+                                </Typography>
+                            </Box>
+                        </Modal>
+                        <Modal
+                            open={tokenSent}
+                            onClose={setTokenSent}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Box sx={{
+                                backgroundColor: '#fff',
+                                boxShadow: 24,
+                                p: 4,
+                                borderRadius: 4,
+                                minWidth: 300,
+                                textAlign: 'center',
+                            }}>
+                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    An Email Has been Sent to {user.user ? `${user.user.email}` : "your email"}
+                                </Typography>
+                            </Box>
+                        </Modal>
+                        <Dialog open={verify} onClose={handleVerifyClose} fullWidth maxWidth="xs">
+                            <DialogTitle>Verify Your Account</DialogTitle>
+                            <DialogContent>
+                                <form onSubmit={handleTokenSubmit}>
+                                    <input
+                                        type="text"
+                                        name="token"
+                                        required
+                                        placeholder="Enter Token"
+                                        style={{ width: '100%', padding: '10px', marginTop: '20px' }}
+                                        value={enteredToken}
+                                        onChange={(e) => setEnteredToken(e.target.value)}
+                                    />
+                                </form>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button variant="contained" type="submit"  onClick={sendTokenToEmail} fullWidth style={{ marginTop: '10px' }}>
+                                    Resend Token
+                                </Button>
+                                <Button variant="contained" type="submit" onClick={handleTokenSubmit} fullWidth style={{ marginTop: '10px' }}>
+                                    Submit Token
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                         {loading ? (
                             <CircularProgress size={48} color="primary" />
                         ) : (

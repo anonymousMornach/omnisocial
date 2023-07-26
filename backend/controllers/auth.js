@@ -4,6 +4,42 @@ const User = require('../schema/User');
 const { hashPassword, comparePassword } = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+// Function to generate a random token
+const generateRandomToken = () => {
+    const randomToken = crypto.randomBytes(32).toString('hex');
+    return randomToken.substring(0, 5);
+};
+
+// Function to send an email with the token
+const sendTokenByEmail = async (email, token) => {
+    try{
+        // Replace the following details with your email service settings
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            port: 587,
+            auth: {
+                user: `${process.env.WEB_SITE_EMAIL}`,
+                pass: `${process.env.WEB_SITE_PASSWORD}`,
+            },
+        });
+
+        const mailOptions = {
+            from: `${process.env.WEB_SITE_NAME}`,
+            to: email,
+            subject: 'Your Verification Code',
+            text: `Your Verification Code is: ${token}`,
+        };
+
+        await transporter.sendMail(mailOptions);
+    }catch(error){
+        console.log(error)
+    }
+
+};
+
 // Register
 exports.register = async (req, res) => {
     try {
@@ -74,10 +110,10 @@ exports.login = async (req, res) => {
         );
 
         if (user){
-            res.json({ token, user: { id: user.username, name: user.name, username: user.username, email: user.email } });
+            res.json({ token, user: { id: user.username, name: user.name, username: user.username, email: user.email, approved: user.approved } });
         }
         else if(userEmail){
-            res.json({ token, user: { id: userEmail._id, name: userEmail.name, username:userEmail.username, email: userEmail.email } });
+            res.json({ token, user: { id: userEmail._id, name: userEmail.name, username:userEmail.username, email: userEmail.email, approved: userEmail.approved  } });
         }
     } catch (err) {
         res.status(500).json({ message: 'An error occurred while processing your request.' });
@@ -110,3 +146,52 @@ exports.checkAuth = async (req, res) => {
         return res.status(401).send("Invalid Token");
     }
 }
+
+// Add this function in the auth controller to generate and send the token
+exports.sendTokenByEmail = async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.user.user });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Generate a random token
+        const verificationCode = generateRandomToken();
+
+        // Update the user's token field in the database
+        user.verificationCode = verificationCode;
+        await user.save();
+
+        // Send the token to the user's email
+        await sendTokenByEmail(user.email, verificationCode);
+
+        res.status(200).json({ message: 'Token sent successfully.' });
+    } catch (err) {
+        res.status(500).json({ message: 'An error occurred while processing your request.' });
+    }
+};
+
+
+// Function to compare user input with stored token
+exports.compareToken = async (req, res) => {
+    try {
+        const { verificationCode } = req.body;
+
+        // Check if the email exists in the database
+        const user = await User.findOne({username: req.user.user});
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Compare the provided token with the stored token
+        if (user.verificationCode === verificationCode) {
+            user.approved = true;
+            await user.save();
+            res.status.json({ message: 'Token is valid.' });
+        } else {
+            res.status(401).json({ message: 'Invalid token.' });
+        }
+    } catch (err) {
+        res.status(500).json({ message: 'An error occurred while processing your request.' });
+    }
+};
