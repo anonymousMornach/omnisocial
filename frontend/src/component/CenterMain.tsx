@@ -24,6 +24,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import { socket } from "../socket";
 import {getTimeDifference} from '../utils/date'
+import {TimeDisplay} from "./TimeDisplay";
 const cookies = new Cookies()
 
 // Function to get a random color for a user from the list of colors
@@ -148,7 +149,7 @@ export default function CenterMain(props: any) {
                                         </IconButton>
                                     }
                                     title={post.user.username}
-                                    subheader={getTimeDifference(post.createdAt)}
+                                    subheader={<TimeDisplay timestamp={post.createdAt}/>}
                                 />
                                 {
                                     (() => {
