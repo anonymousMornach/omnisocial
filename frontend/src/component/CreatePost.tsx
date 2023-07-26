@@ -17,6 +17,7 @@ const cookies = new Cookies();
 
 const MAX_BODY_LENGTH = 1200;
 const MAX_TITLE_LENGTH = 50;
+const MAX_FILE_SIZE_MB = 15; // Maximum file size allowed in MB
 
 interface User {
     username: string;
@@ -39,7 +40,7 @@ export default function CreatePost(props: CreatePostProps) {
         minWidth: 300,
         bgcolor: 'background.paper',
         border: '2px solid #000',
-        borderRadius:"20px",
+        borderRadius: "20px",
         boxShadow: 24,
         p: 4,
     };
@@ -49,6 +50,8 @@ export default function CreatePost(props: CreatePostProps) {
     const [title, setTitle] = useState<string>('');
     const [body, setBody] = useState<string>('');
     const [file, setFile] = useState<File | null>(null);
+    const [isImage, setIsImage] = useState(false);
+    const [miniMedia, setMiniMedia] = useState<string | null>(null);
     const [responseModalOpen, setResponseModalOpen] = useState(false);
     const [response, setResponse] = useState<string>('');
     const [loading, setLoading] = useState(false);
@@ -65,7 +68,37 @@ export default function CreatePost(props: CreatePostProps) {
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files && event.target.files[0];
-        setFile(selectedFile || null);
+        if (selectedFile) {
+            const fileSizeMB = selectedFile.size / (1024 * 1024); // Convert file size to MB
+            if (fileSizeMB > MAX_FILE_SIZE_MB) {
+                // File size exceeds the maximum allowed size
+                setFile(null);
+                setMiniMedia(null);
+                setIsImage(false);
+                setResponse(`File size exceeds ${MAX_FILE_SIZE_MB}MB. Please select a smaller file.`);
+                setResponseModalOpen(true);
+            } else {
+                setFile(selectedFile);
+                if (selectedFile.type.includes('image')) {
+                    setIsImage(true);
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setMiniMedia(reader.result as string);
+                    };
+                    reader.readAsDataURL(selectedFile);
+                } else if (selectedFile.type.includes('video')) {
+                    setIsImage(false);
+                    setMiniMedia(URL.createObjectURL(selectedFile));
+                } else {
+                    setIsImage(false);
+                    setMiniMedia(null);
+                }
+            }
+        } else {
+            setFile(null);
+            setMiniMedia(null);
+            setIsImage(false);
+        }
     };
 
     const isFileValid = (file: File | null): boolean => {
@@ -79,8 +112,8 @@ export default function CreatePost(props: CreatePostProps) {
 
     const handleSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        if (!isFileValid(file)) {
-            setResponse("Please select a valid image or video file.");
+        if (!title || !body || !isFileValid(file)) {
+            setResponse("Please fill in all required fields and select a valid image or video file.");
             setResponseModalOpen(true);
             return;
         }
@@ -183,6 +216,7 @@ export default function CreatePost(props: CreatePostProps) {
                             margin="normal"
                             variant="outlined"
                             inputProps={{ maxLength: MAX_TITLE_LENGTH }}
+                            required // Add required attribute
                         />
                         <Typography variant="body2" color="text.secondary">
                             Characters left: {titleCharacterCount}
@@ -197,6 +231,7 @@ export default function CreatePost(props: CreatePostProps) {
                             margin="normal"
                             variant="outlined"
                             inputProps={{ maxLength: MAX_BODY_LENGTH }}
+                            required // Add required attribute
                         />
                         <Typography variant="body2" color="text.secondary">
                             Characters left: {bodyCharacterCount}
@@ -228,17 +263,43 @@ export default function CreatePost(props: CreatePostProps) {
                                 Select File
                             </Button>
                         </label>
+                        {miniMedia && (
+                            <>
+                                {isImage ? (
+                                    <img
+                                        src={miniMedia}
+                                        alt="Mini version of selected media"
+                                        style={{
+                                            display: "block",
+                                            maxWidth: "100%",
+                                            maxHeight: "200px",
+                                            margin: "10px auto",
+                                        }}
+                                    />
+                                ) : (
+                                    <video width="320" height="240" controls style={{
+                                        display: "block",
+                                        maxWidth: "100%",
+                                        maxHeight: "200px",
+                                        margin: "10px auto",
+                                    }}>
+                                        <source src={miniMedia} type="video/mp4"/>
+                                        Your browser does not support the video tag.
+                                    </video>
+                                )}
+                            </>
+                        )}
                         <Button
                             variant="contained"
                             color="primary"
                             onClick={handleSubmit}
                             disabled={loading} // Disable the button when loading is true
-                             sx={{
-                                 width: '90%',
-                                 display: { xs: 'block' },
-                                 margin:'auto',
-                                 marginTop: 2,
-                             }}
+                            sx={{
+                                width: '90%',
+                                display: { xs: 'block' },
+                                margin:'auto',
+                                marginTop: 2,
+                            }}
                         >
                             {loading ? "Sending..." : "Submit"}
                         </Button>

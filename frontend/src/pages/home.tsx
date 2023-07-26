@@ -12,7 +12,7 @@ export default function Home() {
 
     return (
         <>
-            <ApiEffects setUser={setUser} setFriends={setFriends} setAllUsers={setAllUsers} setPosts={setPosts} setUsers={setUsers} posts={posts} users={users} allUsers={allUsers}/>
+            <ApiEffects setUser={setUser} setFriends={setFriends} setAllUsers={setAllUsers} setPosts={setPosts} setUsers={setUsers} posts={posts} users={users} allUsers={allUsers} user={user}/>
             <Navbar user={user}  allUsers={allUsers}/>
             <Main user={user} friends={friends} users={users} posts={posts}/>
         </>

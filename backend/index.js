@@ -54,6 +54,10 @@ io.on('connection', (socket) => {
         socket.emit('love_post', data);
         socket.broadcast.emit('love_post', data);
     })
+    socket.on('send_friend', async (data) => {
+        socket.emit('send_friend', data);
+        socket.broadcast.emit('send_friend', data);
+    })
 
     socket.broadcast.emit('connected', "Great");
 });

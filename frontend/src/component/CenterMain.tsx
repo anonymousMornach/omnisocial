@@ -18,15 +18,16 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ListItemText from "@mui/material/ListItemText";
 import { format } from "date-fns";
 import { red } from '@mui/material/colors';
-import {Pagination } from '@mui/material';
+import { Pagination } from '@mui/material';
 import CreatePost from './CreatePost'
 import axios from "axios";
 import Cookies from "universal-cookie";
-import {socket} from "../socket";
+import { socket } from "../socket";
+import {getTimeDifference} from '../utils/date'
 const cookies = new Cookies()
 
 // Function to get a random color for a user from the list of colors
-const getRandomColor = (userId:any) => {
+const getRandomColor = (userId: any) => {
     const colors = [red[500], "#3f51b5", "#009688", "#ff5722", "#9c27b0"];
     return colors[userId.charCodeAt(0) % colors.length];
 };
@@ -70,7 +71,7 @@ interface ExpandMoreProps extends IconButtonProps {
 const ExpandMore = styled((props: ExpandMoreProps) => {
     const { expand, ...other } = props;
     return <IconButton {...other} />;
-})(({ theme, expand }:any) => ({
+})(({ theme, expand }: any) => ({
     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
     marginLeft: 'auto',
     transition: theme.transitions.create('transform', {
@@ -80,7 +81,9 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 export default function CenterMain(props: any) {
     const [expandedMap, setExpandedMap] = useState<{ [key: string]: boolean }>({});
+    const [doubleClickedPostId, setDoubleClickedPostId] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [lastClickTime, setLastClickTime] = useState(0); // New state to store the timestamp of the last click
     const postsPerPage = 5; // You can change this to adjust the number of posts per page
 
     const handleExpandClick = (postId: any) => {
@@ -107,6 +110,18 @@ export default function CenterMain(props: any) {
         }
     }
 
+    const handleMediaDoubleClick = (postId: string) => {
+        const currentTime = new Date().getTime();
+        const doubleClickDuration = 400; // Define the maximum duration in milliseconds between clicks to consider them as a double click
+
+        if (currentTime - lastClickTime < doubleClickDuration) {
+            // Double click detected
+            lovePost(postId);
+        }
+
+        setLastClickTime(currentTime); // Update the last click time
+    };
+
     const { posts, user } = props;
 
     // Get current posts based on pagination
@@ -119,7 +134,7 @@ export default function CenterMain(props: any) {
 
     return (
         <>
-            <CreatePost user={user}/>
+            <CreatePost user={user} />
             <List>
                 {currentPosts && currentPosts.length > 0 ? (
                     currentPosts.map((post: any) => (
@@ -133,37 +148,30 @@ export default function CenterMain(props: any) {
                                         </IconButton>
                                     }
                                     title={post.user.username}
-                                    subheader={format(new Date(post.createdAt), "yyyy-MM-dd HH:mm:ss")}
+                                    subheader={getTimeDifference(post.createdAt)}
                                 />
                                 {
-                                    (
-                                        ()=>{
-                                            if(post.image){
-                                                return(
-                                                    <CardMedia
-                                                        component="img"
-                                                        image={post.image}
-                                                        alt="Post Image"
-                                                    />
-                                                )
-                                            }
-                                            else if(post.video){
-                                                return(
-                                                    <CardMedia
-                                                        component="img"
-                                                        image={post.video}
-                                                        alt="Post Video"
-                                                    />
-                                                )
-                                            }
-                                            else{
-                                                return (
-                                                    <>
-                                                    </>
-                                                )
-                                            }
+                                    (() => {
+                                        if (post.image) {
+                                            return (
+                                                <CardMedia
+                                                    component="img"
+                                                    image={post.image}
+                                                    alt="Post Image"
+                                                    onClick={() => handleMediaDoubleClick(post._id)}
+                                                    style={{
+                                                        cursor: "pointer",
+                                                        border: doubleClickedPostId === post._id ? "2px solid red" : "none",
+                                                    }}
+                                                />
+                                            )
+                                        } else {
+                                            return (
+                                                <>
+                                                </>
+                                            )
                                         }
-                                    )()
+                                    })()
                                 }
 
                                 <CardContent>
@@ -198,6 +206,9 @@ export default function CenterMain(props: any) {
                                     <CardContent>
                                         <Typography paragraph>
                                             {post.body}
+                                        </Typography>
+                                        <Typography paragraph>
+                                            {format(new Date(post.createdAt), "yyyy-MM-dd HH:mm:ss")}
                                         </Typography>
                                     </CardContent>
                                 </Collapse>

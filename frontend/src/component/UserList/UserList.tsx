@@ -3,6 +3,8 @@ import axios from "axios";
 import Modal from "./ListModal"
 import AllList from "./AllList";
 import Cookies from "universal-cookie";
+import {socket} from "../../socket";
+
 const cookies = new Cookies();
 
 export default function UserList(props:any){
@@ -40,6 +42,8 @@ export default function UserList(props:any){
             );
 
             // You can do something with the response if needed
+            socket.emit('send_friend', response.data)
+
             setSuccessRequest(true)
             window.setTimeout(handleSuccessClose, 1000)
         } catch (err:any) {

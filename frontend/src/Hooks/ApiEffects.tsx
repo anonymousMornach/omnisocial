@@ -6,7 +6,7 @@ import { socket } from '../socket';
 const cookies = new Cookies();
 
 export default function ApiEffects(props:any){
-    const {setUser, setFriends, setAllUsers, setPosts, setUsers, posts, users, allUsers} = props
+    const {setUser, setFriends, setAllUsers, setPosts, setUsers, posts, users, allUsers, user} = props
     const isAuthenticated = cookies.get("TOKEN");
 
 
@@ -24,7 +24,7 @@ export default function ApiEffects(props:any){
         }).catch((err)=>{
             err = new Error()
         })
-    }, [])
+    }, [socket])
 
     useEffect(() => {
         const config = {
@@ -132,6 +132,22 @@ export default function ApiEffects(props:any){
         socket.on('love_post', handleLovePost)
 
     }, [posts]);
+    useEffect(() => {
+        const handleNewFriendRequest = (data:any)=>{
+            setUser((prevUser: { _id: any }) => {
+                if (prevUser._id === data[0]._id){
+                    return(data[0]);
+                }
+                else if(prevUser._id === data[1]._id){
+                    return(data[1]);
+                }
+            });
+
+        }
+
+        socket.on('send_friend', handleNewFriendRequest)
+
+    }, [user]);
 
     return(
         <>

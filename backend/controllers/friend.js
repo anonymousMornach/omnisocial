@@ -21,7 +21,7 @@ exports.sendFriendRequest = async (req, res) => {
         await senderUser.save();
         await friendUser.save();
 
-        res.json(senderUser);
+        res.json([senderUser, friendUser]);
     } catch (err) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
