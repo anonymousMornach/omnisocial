@@ -122,7 +122,7 @@ export default function CenterMain(props: any) {
         setLastClickTime(currentTime); // Update the last click time
     };
 
-    const { posts, user } = props;
+    const { posts, user, geolocation } = props;
 
     // Get current posts based on pagination
     const indexOfLastPost = currentPage * postsPerPage;
@@ -134,7 +134,7 @@ export default function CenterMain(props: any) {
 
     return (
         <>
-            <CreatePost user={user} />
+            <CreatePost user={user} geolocation={geolocation}/>
             <List>
                 {currentPosts && currentPosts.length > 0 ? (
                     currentPosts.map((post: any) => (
@@ -219,6 +219,15 @@ export default function CenterMain(props: any) {
                                         <Typography paragraph>
                                             {post.body}
                                         </Typography>
+                                        {
+                                            post.location ? (
+                                                <Typography paragraph>
+                                                    {post.location}
+                                                </Typography>
+                                            ) : (
+                                                <></>
+                                            )
+                                        }
                                         <Typography paragraph>
                                             {format(new Date(post.createdAt), "yyyy-MM-dd HH:mm:ss")}
                                         </Typography>

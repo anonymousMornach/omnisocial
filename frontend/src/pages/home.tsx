@@ -9,12 +9,13 @@ export default function Home() {
     const [user, setUser] = useState<any>(null);
     const [users, setUsers] = useState<any>([]);
     const [allUsers, setAllUsers] = useState<any>([]);
+    const [geolocation, setGeolocation] = useState(null);
 
     return (
         <>
-            <ApiEffects setUser={setUser} setFriends={setFriends} setAllUsers={setAllUsers} setPosts={setPosts} setUsers={setUsers} posts={posts} users={users} allUsers={allUsers} user={user}/>
+            <ApiEffects setUser={setUser} setFriends={setFriends} setAllUsers={setAllUsers} setPosts={setPosts} setUsers={setUsers} posts={posts} users={users} allUsers={allUsers} user={user} setGeolocation={setGeolocation}/>
             <Navbar user={user}  allUsers={allUsers}/>
-            <Main user={user} friends={friends} users={users} posts={posts}/>
+            <Main user={user} friends={friends} users={users} posts={posts} geolocation={geolocation}/>
         </>
     );
 }

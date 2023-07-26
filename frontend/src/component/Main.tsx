@@ -26,7 +26,7 @@ export default function Main(props: any) {
                 </Grid>
                 <Grid  xs={12} md={6}>
                     <div style={{ maxHeight: '100vh', overflowY: 'auto' }}>
-                        <Item><CenterMain posts={props.posts} user={props.user} /></Item>
+                        <Item><CenterMain posts={props.posts} user={props.user} geolocation={props.geolocation}/></Item>
                     </div>
                 </Grid>
                 <Grid  xs={12} md={3}>

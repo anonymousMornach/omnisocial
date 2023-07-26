@@ -13,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import axios, { AxiosResponse } from 'axios';
 import Cookies from "universal-cookie";
 import { socket } from '../socket';
+import {getFullCountryName} from "../utils/country"
 const cookies = new Cookies();
 
 const MAX_BODY_LENGTH = 1200;
@@ -29,8 +30,9 @@ interface CreatePostProps {
     user: User | null;
 }
 
-export default function CreatePost(props: CreatePostProps) {
-    const { user } = props;
+export default function CreatePost(props: { user: any; geolocation: any; }) {
+    const { user, geolocation } = props;
+
 
     const style: any = {
         position: 'absolute',
@@ -125,7 +127,8 @@ export default function CreatePost(props: CreatePostProps) {
                 image: undefined as string | undefined,
                 video: undefined as string | undefined,
                 title: undefined as string | undefined,
-                body: undefined as string | undefined
+                body: undefined as string | undefined,
+                location: undefined as string | undefined
             };
             const formDataCloud = new FormData();
             formDataCloud.append('upload_preset', `${process.env.REACT_APP_API_CLOUDINARY_UPLOAD_PRESET}`);
@@ -139,6 +142,7 @@ export default function CreatePost(props: CreatePostProps) {
                     formDataApi.video = `${responseCloud.data.secure_url}`;
                 }
             }
+            formDataApi.location = `${geolocation.city}, ${getFullCountryName(geolocation.country)}`
             formDataApi.title = title;
             formDataApi.body = body;
             const response: AxiosResponse = await axios.post((`${process.env.REACT_APP_API}/posts`), formDataApi, {

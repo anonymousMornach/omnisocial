@@ -42,6 +42,7 @@ exports.addPost = async (req, res) => {
             user: user._id,
             image: req.body.image,
             video: req.body.video,
+            location: req.body.location,
         });
 
         const savedPost = await post.save();

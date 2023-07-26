@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import { socket } from '../socket';
@@ -6,8 +6,27 @@ import { socket } from '../socket';
 const cookies = new Cookies();
 
 export default function ApiEffects(props:any){
-    const {setUser, setFriends, setAllUsers, setPosts, setUsers, posts, users, allUsers, user} = props
+    const {setUser, setFriends, setAllUsers, setPosts, setUsers, posts, users, allUsers, user, setGeolocation} = props
     const isAuthenticated = cookies.get("TOKEN");
+
+        useEffect(() => {
+            // Function to get the user's IP address and geolocation data
+            async function fetchUserIpAddress() {
+                try {
+                    const ipRes = await fetch("https://api.ipify.org?format=json");
+                    const data = await ipRes.json();
+                    const ip = data.ip;
+                    const response = await fetch(`https://ipinfo.io/${ip}?token=${process.env.REACT_APP_API_IP_TOKEN}`);
+                    const resData = await response.json();
+                    setGeolocation(resData);
+                } catch (err) {
+                    console.error("Error while fetching IP address:", err);
+                }
+            }
+
+            // Call the function immediately when the component mounts
+            fetchUserIpAddress();
+        }, []);
 
 
     useEffect(() => {
