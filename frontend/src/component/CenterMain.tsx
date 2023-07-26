@@ -157,7 +157,7 @@ export default function CenterMain(props: any) {
                                                 <CardMedia
                                                     component="img"
                                                     image={post.image}
-                                                    alt="Post Image"
+                                                    alt={post.title}
                                                     onClick={() => handleMediaDoubleClick(post._id)}
                                                     style={{
                                                         cursor: "pointer",
@@ -165,7 +165,19 @@ export default function CenterMain(props: any) {
                                                     }}
                                                 />
                                             )
-                                        } else {
+                                        }else if (post.video) {
+                                            return (
+                                                <CardMedia
+                                                    component="video"
+                                                    controls
+                                                    src={post.video}
+                                                    onClick={() => handleMediaDoubleClick(post._id)}
+                                                    style={{
+                                                        cursor: "pointer",
+                                                        border: doubleClickedPostId === post._id ? "2px solid red" : "none",
+                                                    }}
+                                                />
+                                            )}else {
                                             return (
                                                 <>
                                                 </>

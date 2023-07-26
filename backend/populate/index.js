@@ -300,7 +300,87 @@ const postDataList = [
     {
         "title": "Sunday Brunch",
         "body": "Indulged in a delicious Sunday brunch with friends, complete with pancakes, eggs, and mimosas."
-    }
+    },
+    {
+        "title": "Road Trip Across the Country",
+        "body": "Embarked on an epic road trip across the country, witnessing diverse landscapes and meeting interesting people."
+    },
+    {
+        "title": "Camping Under the Starry Sky",
+        "body": "Spent the night camping under the clear, starry sky. Nature's beauty is truly awe-inspiring."
+    },
+    {
+        "title": "Fitness Milestone Achieved",
+        "body": "Reached a major fitness milestone today. Hard work and dedication pay off!"
+    },
+    {
+        "title": "Volcano Expedition",
+        "body": "Ventured on an expedition to explore the breathtaking sight of an active volcano."
+    },
+    {
+        "title": "Savoring Exotic Cuisine",
+        "body": "Tried exotic dishes from different cultures today, expanding my culinary horizons."
+    },
+    {
+        "title": "Skydiving Adventure",
+        "body": "Took a leap of faith and went skydiving. The rush of adrenaline was exhilarating!"
+    },
+    {
+        "title": "Relaxing Spa Day",
+        "body": "Indulged in a relaxing spa day, pampering myself with massages and facials."
+    },
+    {
+        "title": "A Night at the Opera",
+        "body": "Attended a grand opera performance, mesmerized by the beautiful voices and stunning stage production."
+    },
+    {
+        "title": "Exploring Hidden Caves",
+        "body": "Explored mysterious hidden caves, marveling at the wonders of nature's underground beauty."
+    },
+    {
+        "title": "Meditation Retreat",
+        "body": "Participated in a meditation retreat, finding inner peace and tranquility."
+    },
+    {
+        "title": "Stargazing Night",
+        "body": "Spent the night stargazing with a telescope. The cosmos is vast and mesmerizing!"
+    },
+    {
+        "title": "Charity Fundraising Event",
+        "body": "Organized a charity event to support a local cause. The community's generosity was heartwarming."
+    },
+    {
+        "title": "DIY Home Renovation",
+        "body": "Took on a DIY home renovation project, and the results are surprisingly impressive!"
+    },
+    {
+        "title": "Thrilling Roller Coaster Ride",
+        "body": "Went on an adrenaline-pumping roller coaster ride at an amusement park. What a rush!"
+    },
+    {
+        "title": "Learning a New Language",
+        "body": "Started learning a new language today. Bonjour! Hola! Ciao!"
+    },
+    {
+        "title": "Sustainable Living",
+        "body": "Embracing a sustainable lifestyle, making small changes to protect the planet."
+    },
+    {
+        "title": "Local Farmers' Market",
+        "body": "Explored the vibrant local farmers' market, enjoying fresh produce and handmade crafts."
+    },
+    {
+        "title": "Music Festival Fun",
+        "body": "Attended a music festival and danced the night away to my favorite bands."
+    },
+    {
+        "title": "Baking Adventures",
+        "body": "Tried my hand at baking pastries and cakes. The kitchen smells heavenly!"
+    },
+    {
+        "title": "Wildlife Safari",
+        "body": "Went on a wildlife safari and spotted majestic animals in their natural habitat."
+    },
 ]
 
 // Function to generate a random image URL
@@ -308,12 +388,8 @@ const getRandomImageURL = () => {
     const imageNumber = Math.floor(Math.random() * 1000);
     return `https://picsum.photos/id/${imageNumber}/500/500`;
 };
-// Function to generate a random video URL
-const getRandomVideoURL = () => {
-    const videoNumber = Math.floor(Math.random() * 1000);
-    return `https://www.youtube.com/watch?v=${videoNumber}`;
-}
 
+// Function to delete all users and posts from the database
 // Function to delete all users and posts from the database
 const deleteAllUsersAndPosts = async () => {
     try {
@@ -325,9 +401,15 @@ const deleteAllUsersAndPosts = async () => {
     }
 };
 
+// Function to get a random subset of elements from an array
+const getRandomSubset = (array, subsetSize) => {
+    const shuffled = array.slice().sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, subsetSize);
+};
+
 // Delete all existing users and posts before creating new ones
 deleteAllUsersAndPosts().then(() => {
-    // Create 50 users and 5 unique posts for each user
+    // Create 50 users and assign 5 random posts for each user
     const usersPromises = userDataList.map(async (userData) => {
         const hashedPassword = await hashPassword(userData.password);
 
@@ -341,8 +423,11 @@ deleteAllUsersAndPosts().then(() => {
 
         await newUser.save();
 
-        // Create 5 unique posts for the user
-        const userPostsPromises = postDataList.map(async (postData, index) => {
+        // Get 5 random posts for the user
+        const randomPosts = getRandomSubset(postDataList, 5);
+
+        // Create 5 posts for the user
+        const userPostsPromises = randomPosts.map(async (postData, index) => {
             const post = new Post({
                 title: `${postData.title} by ${userData.username}`,
                 body: `${postData.body} (${index + 1})`,
