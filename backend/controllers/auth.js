@@ -129,26 +129,26 @@ exports.checkAuth = async (req, res) => {
     }
 
     // Split the "Authorization" header to get the token part after "Bearer "
-    const token = tokenGet;
+    const token = tokenGet.split(" ")[1]
     try {
         const decoded = jwt.verify(token, process.env.JWT_TOKEN_KEY);
         req.user = decoded;
         const user = await User.findOne({username: req.user.user});
         if (user){
-            if(!user) {
-                return res.status(401).send("unverified");
+            if(!user.approved) {
+                res.status(401).send("unverified");
             }else{
-                return res.status(200).send("verified");
+                res.status(200).send("verified");
+                console.log("verified")
             }
         }
         else{
             res.status(401).send("Invalid Token")
+            console.log("3")
         }
     } catch (err) {
-        return res.status(401).send("Invalid Token");
+        res.status(401).send("Invalid Token");
     }
-
-    return next();
 }
 
 // Add this function in the auth controller to generate and send the token

@@ -15,6 +15,7 @@ import axios from 'axios';
 import {CircularProgress, Modal } from "@mui/material";
 import Cookies from "universal-cookie";
 import { socket } from "../socket";
+import { useNavigate } from "react-router-dom";
 const cookies = new Cookies();
 
 function Copyright(props: any) {
@@ -40,6 +41,7 @@ export default function Register() {
     const [error, setError] = useState<any>({});
     const [loading, setLoading] = useState(false); // New state for loading
 
+    const navigate = useNavigate()
     const handleSuccessModalOpen = () => {
         setRegisterSuccess(true);
     };
@@ -122,8 +124,8 @@ export default function Register() {
             socket.emit("new_user", response.data.newUser);
             handleSuccessModalOpen(); // Show the modal on successful registration
             window.setTimeout(()=>{
-                window.location.href = "/"
-            }, 500)
+                navigate("/login")
+            }, 800)
 
         } catch (err: any) {
             setError(err.response);
@@ -171,10 +173,7 @@ export default function Register() {
                             textAlign: 'center',
                         }}>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Welcome {user.newUser ? user.newUser.username : "user"  } Registration Successful
-                            </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                Redirecting to homepage
+                                {user.newUser ? user.newUser.username : "user"  } Registered
                             </Typography>
                         </Box>
                     </Modal>

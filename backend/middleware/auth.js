@@ -52,7 +52,7 @@ exports.verifyTokenSafe = async (req, res, next) => {
     }
 
     // Split the "Authorization" header to get the token part after "Bearer "
-    const token = tokenGet
+    const token = tokenGet.split(" ")[1]
     try {
         const decoded = jwt.verify(token, process.env.JWT_TOKEN_KEY);
         req.user = decoded;

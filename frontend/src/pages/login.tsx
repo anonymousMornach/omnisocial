@@ -16,6 +16,8 @@ import axios from 'axios';
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Modal } from "@mui/material";
 import Cookies from "universal-cookie";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const cookies = new Cookies();
 
@@ -46,6 +48,8 @@ export default function Login() {
     const [tokenRecieved, setTokenRecieved] = useState(false);
     const [tokenRecievedFailed, setTokenRecievedFailed] = useState(false);
     const [enteredToken, setEnteredToken] = useState("");
+
+    const navigate= useNavigate()
 
     const handleVerifyOpen = () => {
         setVerify(true);
@@ -112,7 +116,7 @@ export default function Login() {
             setTokenRecieved(true);
             setTimeout(() => {
                 setTokenRecieved(false);
-                window.location.href = "/"
+                navigate("/");
             }, 1000);
         } catch (err) {
             setTokenRecievedFailed(true);
@@ -159,7 +163,7 @@ export default function Login() {
             else{
                 handleSuccessModalOpen();
                 window.setTimeout(() => {
-                    window.location.href = "/";
+                    navigate("/");
                 }, 500);
             }
         } catch (err: any) {

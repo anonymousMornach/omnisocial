@@ -13,7 +13,7 @@ export default function ProtectedRoutes({ component: Component, ...rest }: any) 
         try {
             const response = await axios.post(`${process.env.REACT_APP_API}/auth/`, {}, {
                 headers: {
-                    Authorization: `${token}`
+                    Authorization: `Bearer ${token}`
                 }
             });
 
