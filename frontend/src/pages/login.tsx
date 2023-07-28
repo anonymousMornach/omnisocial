@@ -43,7 +43,6 @@ export default function Login() {
     const [error, setError] = useState<any>({});
     const [loading, setLoading] = useState(false);
     const [verify, setVerify] = useState(false);
-    const [open, setOpen] = useState(false);
     const [tokenSent, setTokenSent] = useState(false);
     const [tokenRecieved, setTokenRecieved] = useState(false);
     const [tokenRecievedFailed, setTokenRecievedFailed] = useState(false);
@@ -97,34 +96,7 @@ export default function Login() {
         }
     };
 
-    const handleTokenSubmit = async (event: any) => {
-        const auth = cookies.get("TOKEN");
-        event.preventDefault();
-        try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API}/auth/verify_token`,
-                {
-                    verificationCode: enteredToken,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${auth}`,
-                    },
-                }
-            );
-            console.log(response)
-            setTokenRecieved(true);
-            setTimeout(() => {
-                setTokenRecieved(false);
-                navigate("/");
-            }, 1000);
-        } catch (err) {
-            setTokenRecievedFailed(true);
-            setTimeout(() => {
-                setTokenRecievedFailed(false);
-            }, 1000);
-        }
-    };
+
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

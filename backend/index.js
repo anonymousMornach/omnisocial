@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app); // Use the http server created from express
 const io = socketIO(server, {
     cors: {
-        origin: ["http://localhost:3000", "https://omnisocial.vercel.app"],
+        origin: ["http://localhost:3000", "https://omnisocial.vercel.app", "http://127.0.0.1:3000/"],
         methods: ["GET", "POST"],
         allowedHeaders: ["Authorization"],
         credentials: true,
@@ -62,6 +62,6 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('connected', "Great");
 });
 
-server.listen(process.env.PORT || 2000, () => {
-    console.log("server is running on port 2000");
+server.listen(process.env.PORT || 4000, () => {
+    console.log("server is running on port 4000");
 });
