@@ -1,6 +1,6 @@
 import axios from "axios";
 import {getToken} from "@/utils/token";
-export default function (req:any, res:any){
+export default function posts(req:any, res:any){
     if (req.method === "GET"){
         const config = {
             headers: {

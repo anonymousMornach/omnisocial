@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default async function (req:any, res:any){
+export default async function register(req:any, res:any){
     const body = JSON.parse(req.body)
     const {email, password, username, name} = body;
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import {getToken} from "@/utils/token";
 
-export default async function(req:any, res:any)  {
+export default async function verify(req:any, res:any)  {
     const token = getToken()
     const body = JSON.parse(req.body)
     const {verificationCode} = body;

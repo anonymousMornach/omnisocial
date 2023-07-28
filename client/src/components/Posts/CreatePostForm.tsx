@@ -10,6 +10,7 @@ import axios, { AxiosResponse } from "axios";
 import { getFullCountryName } from "@/utils/parseCountry";
 import { socket } from "@/utils/socket";
 import { getToken } from "@/utils/token";
+import Image from 'next/image';
 
 const MAX_BODY_LENGTH = 1200;
 const MAX_TITLE_LENGTH = 50;
@@ -22,7 +23,6 @@ interface User {
 }
 
 interface CreatePostProps {
-    user: User | null;
     handleClose: () => void;
     open: boolean;
 }

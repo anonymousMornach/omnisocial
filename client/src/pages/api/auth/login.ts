@@ -1,7 +1,7 @@
 import {getToken, setToken} from "@/utils/token";
 import axios from "axios";
 
-export default  async function (req:any, res:any) {
+export default  async function login(req:any, res:any) {
     if (req.method === "POST") {
         const body = JSON.parse(req.body);
         const email = body.email
