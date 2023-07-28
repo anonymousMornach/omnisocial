@@ -19,7 +19,7 @@ import SimpleModal from "@/components/Utils/SimpleModal";
 import RetrieveToken from "@/components/Utils/RetrieveToken";
 import Copyright from "@/components/Utils/Copyright";
 
-export default function Login() {
+export default function LoginPage() {
     const router = useRouter();
     const cookies = new Cookies();
     const [verify, setVerify] = useState(false);
@@ -91,8 +91,8 @@ export default function Login() {
                 handleVerifyOpen();
             } else {
                 handleSuccessModalOpen();
-                window.setTimeout(() => {
-                    router.replace("/");
+                setTimeout(() => {
+                    router.push("/");
                 }, 500);
             }
         } catch (err: any) {

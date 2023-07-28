@@ -4,8 +4,8 @@ import {Grid, Paper, Typography} from "@mui/material";
 import Users from "@/components/Users/Users";
 import {authenticate} from "@/utils/auth";
 import {getToken} from "@/utils/token";
-import CreatePost from "@/components/Posts/CreatePost";
-import Posts from "@/components/Posts/Posts";
+import CreatePost from "@/components/LoginPage/CreatePost";
+import Posts from "@/components/LoginPage/Posts";
 import {styled} from "@mui/material/styles";
 export default function UserProfile(){
 
