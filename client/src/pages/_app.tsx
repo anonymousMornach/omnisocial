@@ -20,7 +20,7 @@ const MyApp: React.FC<MyAppProps> = ({ Component, pageProps }) => {
     useEffect(() => {
         if (pathname !== '/login' && pathname !== '/register') {
             // Perform authentication here
-            authenticate()
+            authenticate(router)
                 .then(() => {
                     setAuthenticated(true); // Set authenticated to true when the authentication is successful
                 })
