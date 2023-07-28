@@ -1,4 +1,4 @@
-import Posts from "@/components/LoginPage/Posts"
+import Posts from "@/components/Posts/Posts"
 import UserProfileComponent from "@/components/User/UserProfileComponent";
 
 export default function Profile(props: any){

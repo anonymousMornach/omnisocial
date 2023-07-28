@@ -1,8 +1,8 @@
 import { Grid, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import CreatePost from "@/components/LoginPage/CreatePost";
+import CreatePost from "@/components/Posts/CreatePost";
 import Users from "@/components/Users/Users";
-import Posts from "@/components/LoginPage/Posts";
+import Posts from "@/components/Posts/Posts";
 
 export default function Home() {
     const Item = styled(Paper)(({ theme }) => ({
