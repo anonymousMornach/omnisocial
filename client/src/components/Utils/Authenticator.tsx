@@ -7,7 +7,7 @@ function Authenticator() {
 
     useEffect(() => {
         authenticate(router); // Pass the router instance to the authenticate function
-    }, []);
+    }, [router]);
 
     return <></>; // You can return null or any component you like, as this component won't render anything
 }

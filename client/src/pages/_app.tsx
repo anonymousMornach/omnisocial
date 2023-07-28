@@ -32,7 +32,7 @@ const MyApp: React.FC<MyAppProps> = ({ Component, pageProps }) => {
             // No need to authenticate for login and register pages
             setAuthenticated(true);
         }
-    }, [pathname]);
+    }, [pathname, router]);
 
     if (!authenticated) {
         // Do not render anything until the authentication process is complete
