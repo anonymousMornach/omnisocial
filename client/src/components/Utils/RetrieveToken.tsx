@@ -3,6 +3,7 @@ import SimpleModal from "@/components/Utils/SimpleModal";
 import { useState, useEffect } from "react";
 import { getToken } from "@/utils/token";
 import axios from "axios";
+import {router} from "next/client";
 
 export default function RetrieveToken(props: any) {
     const { verify, user, handleVerifyClose } = props;
@@ -17,9 +18,10 @@ export default function RetrieveToken(props: any) {
         event.preventDefault();
         setLoading(true); // Start loading animation when submitting the token
 
-        const data = new FormData(event.currentTarget);
+        const form = document.getElementById("verificationForm") as HTMLFormElement;
+        const data = new FormData(form);
         const verificationCode = data.get("token");
-        const token = getToken();
+        const token = await getToken();
         try {
             const response = await fetch("api/auth/verify", {
                 body: JSON.stringify({ token, verificationCode }),
@@ -28,8 +30,17 @@ export default function RetrieveToken(props: any) {
                     "Content-Type": "application/json",
                 },
             });
+            console.log(response);
             if (response.ok) {
                 setTokenRecieved(true);
+                setTimeout(() => {
+                    router.push("/"); // Redirect to the main menu after the timeout
+                }, 1000);
+                setLoading(false); // Stop loading animation
+                return;
+            }
+            else{
+                setTokenRecievedFailed(true);
                 setLoading(false); // Stop loading animation
                 return;
             }
@@ -83,7 +94,7 @@ export default function RetrieveToken(props: any) {
                 <DialogTitle style={{ textAlign: "center" }}>Verify Your Account</DialogTitle>
                 <DialogContent>
                     <Typography style={{ textAlign: "center" }}>A 5-digit code has been sent to {user ? user.email : "your email"}</Typography>
-                    <form onSubmit={handleTokenSubmit}>
+                    <form id="verificationForm" onSubmit={handleTokenSubmit}>
                         <input
                             type="text"
                             name="token"

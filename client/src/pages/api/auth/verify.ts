@@ -1,10 +1,7 @@
 import axios from "axios";
-import {getToken} from "@/utils/token";
-
 export default async function verify(req:any, res:any)  {
-    const token = getToken()
-    const body = JSON.parse(req.body)
-    const {verificationCode} = body;
+    const body = (req.body)
+    const {verificationCode, token} = body;
     if (req.method === "POST"){
         try {
             const response = await axios.post(
@@ -18,11 +15,9 @@ export default async function verify(req:any, res:any)  {
                     },
                 }
             );
-            console.log("success", response);
             res.status(200).json()
-        } catch (err) {
-            console.log("failed", err);
-            res.status(401).json()
+        } catch (err:any) {
+            res.status(401).json(err.response.data)
         }
     }else if(req.method === "GET"){
         try {
