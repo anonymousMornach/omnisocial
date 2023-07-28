@@ -109,6 +109,7 @@ function Navbar(props:any) {
                 backgroundColor: '#fff', // Set your desired background color
                 padding: 1,
                 boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.1)', // Add a subtle shadow
+                marginBottom:1
             }}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
@@ -150,7 +151,7 @@ function Navbar(props:any) {
 
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                             <Autocomplete
-                                sx={{ width: 300, backgroundColor: 'white', borderRadius: '4px' }} // Add some border-radius
+                                sx={{ width: 400, backgroundColor: 'white', borderRadius: '4px' }} // Add some border-radius
                                 freeSolo
                                 id="free-solo-2-demo"
                                 disableClearable
@@ -202,7 +203,7 @@ function Navbar(props:any) {
                             />
                         </Box>
                         <Autocomplete
-                            sx={{ backgroundColor: 'white', flexGrow: 1, display: { xs: 'flex', md: 'none' }, borderRadius: '4px' }} // Add some border-radius
+                            sx={{ backgroundColor: 'white', flexGrow: 1, display: { xs: 'flex', md: 'none' }, borderRadius: '4px', marginRight: 3 }} // Add some border-radius
                             freeSolo
                             id="free-solo-2-demo"
                             disableClearable
