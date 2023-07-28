@@ -31,7 +31,7 @@ export default function UserProfile(){
             <Grid item xs={12} md={6}>
                 <div style={{ maxHeight: "100vh", overflowY: "auto" }}>
                     <Item>
-                        <Profile url={`/posts/${slug}`} username={`${slug}`} />
+                        <Profile postUrl={`/posts/${slug}`} username={`${slug}`} />
                     </Item>
                 </div>
             </Grid>
