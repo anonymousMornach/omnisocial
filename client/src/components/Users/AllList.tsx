@@ -30,7 +30,6 @@ export default function AllList(props: any) {
 
     return (
         <>
-            <h1>{title}</h1>
             <List sx={{ display: { xs: 'none', sm: 'block' } }}>
                 {sortedUsers && sortedUsers.length > 0 ? (
                     sortedUsers.map((user: any, index: number) => (

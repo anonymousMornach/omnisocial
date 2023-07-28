@@ -39,11 +39,11 @@ export default function Home() {
                 <div style={{ maxHeight: "100vh", overflowY: "auto" }}>
                     <Item>
                         <Typography variant="h6">Friends</Typography>
-                        <Users url={"/friends/friend/private"} />
+                        <Users url={"/friends/friend/private"} title={"Friends"}/>
                     </Item>
                     <Item style={{ marginTop: 20 }}>
                         <Typography variant="h6">Users</Typography>
-                        <Users url={"/friends/nonfriend/private"} />
+                        <Users url={"/friends/nonfriend/private"} title={"Users"}/>
                     </Item>
                 </div>
             </Grid>
