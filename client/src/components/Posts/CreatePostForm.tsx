@@ -27,7 +27,7 @@ interface CreatePostProps {
     open: boolean;
 }
 
-export default function CreatePostForm(props: CreatePostProps) {
+export default function CreatePostForm(props: any) {
     const [geolocation, setGeolocation] = useState<any>({});
     const [title, setTitle] = useState<string>("");
     const [body, setBody] = useState<string>("");
