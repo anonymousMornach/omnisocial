@@ -92,9 +92,10 @@ export default function Register() {
         }
 
         try {
+            const name = `${firstName} ${lastName}`
             const response = await fetch('api/auth/register', {
                 method: "POST",
-                body: JSON.stringify({ email, password, username, firstName, lastName }),
+                body: JSON.stringify({ email, password, username, name }),
             });
             const data = await response.json();
             if (!response.ok) {

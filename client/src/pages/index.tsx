@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import CreatePost from "@/components/Posts/CreatePost";
 import Users from "@/components/Users/Users";
 import Posts from "@/components/Posts/Posts";
+import Large from "@/components/Utils/Navigate/Large"
 
 export default function Home() {
     const Item = styled(Paper)(({ theme }) => ({
@@ -19,7 +20,7 @@ export default function Home() {
             <Grid item xs={12} md={3}>
                 <div style={{ maxHeight: "100vh", overflowY: "auto" }}>
                     <Item>
-                        <Typography variant="h6">Hello</Typography>
+                        <Large/>
                     </Item>
                 </div>
             </Grid>
@@ -35,15 +36,15 @@ export default function Home() {
             </Grid>
 
             {/* Right column */}
-            <Grid item xs={12} md={3}>
+            <Grid item md={3} sx={{ display: { xs: 'none', md: 'block' } }}>
                 <div style={{ maxHeight: "100vh", overflowY: "auto" }}>
                     <Item>
                         <Typography variant="h6">Friends</Typography>
-                        <Users url={"/friends/friend/private"} title={"Friends"}/>
+                        <Users url={"/friends/friend/private"} title={"Friends"} />
                     </Item>
                     <Item style={{ marginTop: 20 }}>
                         <Typography variant="h6">Users</Typography>
-                        <Users url={"/friends/nonfriend/private"} title={"Users"}/>
+                        <Users url={"/friends/nonfriend/private"} title={"Users"} />
                     </Item>
                 </div>
             </Grid>
