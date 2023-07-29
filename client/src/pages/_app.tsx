@@ -15,8 +15,6 @@ interface MyAppProps {
 const MyApp: React.FC<MyAppProps> = ({ Component, pageProps }) => {
     const router = useRouter();
     const { pathname } = router;
-    const [authenticated, setAuthenticated] = React.useState(false);
-
 
 
     // Once the authentication is complete, render the component

@@ -3,9 +3,10 @@ import SimpleModal from "@/components/Utils/SimpleModal";
 import { useState, useEffect } from "react";
 import { getToken } from "@/utils/token";
 import axios from "axios";
-import {router} from "next/client";
-
+import {useRouter} from "next/router";
 export default function RetrieveToken(props: any) {
+
+    const router = useRouter()
     const { verify, user, handleVerifyClose } = props;
     const [tokenSentFailed, setTokenSentFailed] = useState(false);
     const [tokenSent, setTokenSent] = useState(false);
@@ -66,7 +67,7 @@ export default function RetrieveToken(props: any) {
                 }
             );
             setTokenSent(true);
-            setTimeout(() => {
+            window.setTimeout(() => {
                 setTokenSent(false);
                 setLoading(false); // Stop loading animation after the timeout
             }, 1000);
