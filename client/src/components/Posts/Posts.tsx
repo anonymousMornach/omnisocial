@@ -90,6 +90,7 @@ export default function Posts(props: any) {
         socket.on('love_post', handleLovePost)
         socket.on("new_post", (newPostData) => {
             // Update the state with the new posts data
+            console.log("newPosts")
             setRealTimePosts((prevPosts) => [newPostData, ...prevPosts]);
         });
     }, [realTimePosts]);
