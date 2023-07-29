@@ -27,8 +27,8 @@ export default function Home() {
                 </div>
             </Grid>
             {/* Left column */}
-            <Grid item xs={12} sx={{ display: { xs: 'block', md: 'none' } }}>
-                <div style={{ maxHeight: "100vh", overflowY: "auto" }}>
+            <Grid sx={{ display: { xs: 'block', md: 'none', margin:"auto" } }}>
+                <div style={{overflowY: "auto" }}>
                     <Item>
                         <Mobile/>
                     </Item>
