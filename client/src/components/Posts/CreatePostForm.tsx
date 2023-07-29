@@ -211,90 +211,98 @@ export default function CreatePostForm(props: any) {
                         <Typography variant="h6" component="h2">
                             Create Post
                         </Typography>
-                        <TextField
-                            label="Title"
-                            value={title}
-                            onChange={handleTitleChange}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                            inputProps={{ maxLength: MAX_TITLE_LENGTH }}
-                            required
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                            Characters left: {titleCharacterCount}
-                        </Typography>
-                        <TextField
-                            label="Body"
-                            value={body}
-                            onChange={handleBodyChange}
-                            fullWidth
-                            multiline
-                            rows={6}
-                            margin="normal"
-                            variant="outlined"
-                            inputProps={{ maxLength: MAX_BODY_LENGTH }}
-                            required
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                            Characters left: {bodyCharacterCount}
-                        </Typography>
-                        <input
-                            required
-                            type="file"
-                            accept="image/jpeg, image/png, video/mp4"
-                            onChange={handleFileChange}
-                            style={{ display: "none" }}
-                            id="file-input"
-                        />
-                        <label htmlFor="file-input">
-                            <Button
-                                variant="contained"
-                                component="span"
-                                color="primary"
-                                sx={{
-                                    mt: 2,
-                                    py: 1,
-                                    px: 2,
-                                    fontWeight: "bold",
-                                    fontSize: "1rem",
-                                    borderRadius: "20px",
-                                    cursor: "pointer",
-                                    textTransform: "none",
-                                }}
-                            >
-                                Select File
-                            </Button>
-                        </label>
-                        {miniMedia && (
-                            <>
-                                {isImage ? (
-                                    <Image
-                                        src={miniMedia}
-                                        alt="Mini version of selected media"
-                                        layout="responsive"
-                                        width={200}
-                                        height={200}
-                                    />
+                        <Box sx={{
+                            maxHeight: "50vh",
+                            overflowY: "auto",
+                            marginBottom: "20px",
+                            position: "relative", // Add a relative position to the container
+                        }}>
 
-                                ) : (
-                                    <video
-                                        width="320"
-                                        height="240"
-                                        controls
-                                        style={{
-                                            display: "block",
-                                            maxWidth: "100%",
-                                            maxHeight: "200px",
-                                            margin: "10px auto",
-                                        }}
-                                    >
-                                        <source src={miniMedia} type="video/mp4" />
-                                        Your browser does not support the video tag.
-                                    </video>
-                                )}
-                            </>
-                        )}
+                            <TextField
+                                label="Title"
+                                value={title}
+                                onChange={handleTitleChange}
+                                fullWidth
+                                margin="normal"
+                                variant="outlined"
+                                inputProps={{ maxLength: MAX_TITLE_LENGTH }}
+                                required
+                            />
+                            <Typography variant="body2" color="text.secondary">
+                                Characters left: {titleCharacterCount}
+                            </Typography>
+                            <TextField
+                                label="Body"
+                                value={body}
+                                onChange={handleBodyChange}
+                                fullWidth
+                                multiline
+                                rows={6}
+                                margin="normal"
+                                variant="outlined"
+                                inputProps={{ maxLength: MAX_BODY_LENGTH }}
+                                required
+                            />
+                            <Typography variant="body2" color="text.secondary">
+                                Characters left: {bodyCharacterCount}
+                            </Typography>
+                            <input
+                                required
+                                type="file"
+                                accept="image/jpeg, image/png, video/mp4"
+                                onChange={handleFileChange}
+                                style={{ display: "none" }}
+                                id="file-input"
+                            />
+                            <label htmlFor="file-input">
+                                <Button
+                                    variant="contained"
+                                    component="span"
+                                    color="primary"
+                                    sx={{
+                                        mt: 2,
+                                        py: 1,
+                                        px: 2,
+                                        fontWeight: "bold",
+                                        fontSize: "1rem",
+                                        borderRadius: "20px",
+                                        cursor: "pointer",
+                                        textTransform: "none",
+                                    }}
+                                >
+                                    Select File
+                                </Button>
+                            </label>
+                            {miniMedia && (
+                                <>
+                                    {isImage ? (
+                                        <Image
+                                            src={miniMedia}
+                                            alt="Mini version of selected media"
+                                            layout="responsive"
+                                            width={100}
+                                            height={100}
+                                        />
+
+                                    ) : (
+                                        <video
+                                            width="320"
+                                            height="240"
+                                            controls
+                                            style={{
+                                                display: "block",
+                                                maxWidth: "100%",
+                                                maxHeight: "200px",
+                                                margin: "10px auto",
+                                            }}
+                                        >
+                                            <source src={miniMedia} type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    )}
+                                </>
+                            )}
+                        </Box>
                         <Button
                             variant="contained"
                             color="primary"
