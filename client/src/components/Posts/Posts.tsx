@@ -64,6 +64,14 @@ export default function Posts(props: any) {
     const postsPerPage = 5; // You can change this to adjust the number of posts per page
 
     useEffect(() => {
+        // no-op if the socket is already connected
+        socket.connect();
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
+    useEffect(() => {
         const handleLovePost = (data:any)=>{
             setRealTimePosts((prevPosts: { _id: any; }[]) => {
                 return prevPosts.map((post: { _id: any; }) => {
@@ -84,11 +92,6 @@ export default function Posts(props: any) {
             // Update the state with the new posts data
             setRealTimePosts((prevPosts) => [newPostData, ...prevPosts]);
         });
-
-        // Clean up the WebSocket listener when the component unmounts
-        return () => {
-            socket.off("new_post");
-        };
     }, [realTimePosts]);
 
     const handleExpandClick = (postId: any) => {
