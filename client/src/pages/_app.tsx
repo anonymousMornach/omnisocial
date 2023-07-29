@@ -15,7 +15,29 @@ interface MyAppProps {
 const MyApp: React.FC<MyAppProps> = ({ Component, pageProps }) => {
     const router = useRouter();
     const { pathname } = router;
+    const [authenticated, setAuthenticated] = React.useState(false);
 
+    useEffect(() => {
+        if (pathname !== '/login' && pathname !== '/register') {
+            // Perform authentication here
+            authenticate()
+                .then(() => {
+                    setAuthenticated(true); // Set authenticated to true when the authentication is successful
+                })
+                .catch((error) => {
+                    console.error('Authentication failed:', error);
+                    // Handle authentication error, redirect to login or show a message
+                });
+        } else {
+            // No need to authenticate for login and register pages
+            setAuthenticated(true);
+        }
+    }, [pathname]);
+
+    if (!authenticated) {
+        // Do not render anything until the authentication process is complete
+        return null;
+    }
 
     // Once the authentication is complete, render the component
     return (

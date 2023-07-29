@@ -14,7 +14,7 @@ export default function Home() {
     }));
 
     return (
-        <Grid container spacing={2}>
+        <>
             {/* Left column */}
             <Grid item xs={12} md={3}>
                 <div style={{ maxHeight: "100vh", overflowY: "auto" }}>
@@ -47,6 +47,6 @@ export default function Home() {
                     </Item>
                 </div>
             </Grid>
-        </Grid>
+        </>
     );
 }
