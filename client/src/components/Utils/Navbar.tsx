@@ -105,11 +105,11 @@ function Navbar(props:any) {
     if (user){
         return (
             <AppBar position="static" sx={{
-                height: 90,
+                height: 50,
                 backgroundColor: '#fff', // Set your desired background color
                 padding: 1,
                 boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.1)', // Add a subtle shadow
-                marginBottom:1
+                marginBottom: 1
             }}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>

@@ -269,16 +269,14 @@ export default function CreatePostForm(props: any) {
                         {miniMedia && (
                             <>
                                 {isImage ? (
-                                    <img
+                                    <Image
                                         src={miniMedia}
                                         alt="Mini version of selected media"
-                                        style={{
-                                            display: "block",
-                                            maxWidth: "100%",
-                                            maxHeight: "200px",
-                                            margin: "10px auto",
-                                        }}
+                                        layout="responsive"
+                                        width={200}
+                                        height={200}
                                     />
+
                                 ) : (
                                     <video
                                         width="320"

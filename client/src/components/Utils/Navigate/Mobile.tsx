@@ -8,6 +8,10 @@ import useSWR from "swr";
 import { fetcher } from "@/utils/fetcher";
 import Link from "next/link";
 import HomeIcon from '@mui/icons-material/Home';
+import Diversity1Icon from "@mui/icons-material/Diversity1";
+import React from "react";
+import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
+import ForumIcon from "@mui/icons-material/Forum";
 
 export default function Mobile() {
     const linkStyle = {
@@ -22,7 +26,7 @@ export default function Mobile() {
 
     if (user) {
         return (
-            <Toolbar>
+            <Toolbar sx={{ display: "flex", justifyContent: "center"  }}>
                 <Grid container spacing={2}>
                     <Grid item>
                         <Link href={`/`} style={linkStyle}>
@@ -37,7 +41,7 @@ export default function Mobile() {
                         <Link href={`/profile/${user.username}`} style={linkStyle}>
                             <IconButton>
                                 <Badge badgeContent={3} color="error">
-                                    <NotificationsIcon />
+                                    <Diversity1Icon/>
                                 </Badge>
                             </IconButton>
                         </Link>
@@ -45,21 +49,14 @@ export default function Mobile() {
                     <Grid item>
                         <Link href={`/profile/${user.username}`} style={linkStyle}>
                             <IconButton>
-                                <ShoppingCartIcon />
+                                <DynamicFeedIcon/>
                             </IconButton>
                         </Link>
                     </Grid>
                     <Grid item>
                         <Link href={`/profile/${user.username}`} style={linkStyle}>
                             <IconButton>
-                                <PersonIcon />
-                            </IconButton>
-                        </Link>
-                    </Grid>
-                    <Grid item>
-                        <Link href={`/profile/${user.username}`} style={linkStyle}>
-                            <IconButton>
-                                <SettingsIcon />
+                                <ForumIcon/>
                             </IconButton>
                         </Link>
                     </Grid>
