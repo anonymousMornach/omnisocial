@@ -4,6 +4,8 @@ import CreatePost from "@/components/Posts/CreatePost";
 import Users from "@/components/Users/Users";
 import Posts from "@/components/Posts/Posts";
 import Large from "@/components/Utils/Navigate/Large"
+import Mobile from "@/components/Utils/Navigate/Mobile"
+
 
 export default function Home() {
     const Item = styled(Paper)(({ theme }) => ({
@@ -21,6 +23,14 @@ export default function Home() {
                 <div style={{ maxHeight: "100vh", overflowY: "auto" }}>
                     <Item>
                         <Large/>
+                    </Item>
+                </div>
+            </Grid>
+            {/* Left column */}
+            <Grid item xs={12} sx={{ display: { xs: 'block', md: 'none' } }}>
+                <div style={{ maxHeight: "100vh", overflowY: "auto" }}>
+                    <Item>
+                        <Mobile/>
                     </Item>
                 </div>
             </Grid>
@@ -48,6 +58,7 @@ export default function Home() {
                     </Item>
                 </div>
             </Grid>
+
         </>
     );
 }
