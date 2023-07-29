@@ -113,7 +113,7 @@ function Navbar(props:any) {
             }}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, fontSize: '2.5rem' }} />
+                        <AdbIcon onClick={goToHome} sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color:"primary.main" }}/>
                         <Typography
                             variant="h6"
                             noWrap
@@ -130,7 +130,7 @@ function Navbar(props:any) {
                         >
                             OmniSocial
                         </Typography>
-                        <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, fontSize: '2.5rem' }} />
+                        <AdbIcon onClick={goToHome} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, fontSize: '2.5rem' , color:"primary.main" }} />
                         <Typography
                             variant="h6"
                             noWrap
