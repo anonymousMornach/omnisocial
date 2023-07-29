@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText, ListItemIcon ,Avatar } from "@mui/material";
+import { List, ListItem, ListItemText ,Avatar } from "@mui/material";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListAvatar from "@/components/Users/ListAvatar";
 import React from "react";
@@ -7,6 +7,11 @@ import Link from "next/link";
 import useSWR from "swr";
 import {fetcher} from "@/utils/fetcher";
 import SkeletonUser from "@/components/Skeleton/SkeletonUser"
+import Diversity1Icon from '@mui/icons-material/Diversity1';
+import Groups2Icon from '@mui/icons-material/Groups2';
+import ChatIcon from '@mui/icons-material/Chat';
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
+import ForumIcon from '@mui/icons-material/Forum';
 
 export default function Large() {
     const linkStyle = {
@@ -41,7 +46,7 @@ export default function Large() {
                     <Link href={`profile/${user.username}`} style={linkStyle}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <Avatar/>
+                                <Diversity1Icon/>
                             </ListItemAvatar>
                             <ListItemText
                                 primary={"Friends"}
@@ -51,7 +56,7 @@ export default function Large() {
                     <Link href={`/profile/${user.username}`} style={linkStyle}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <Avatar/>
+                                <Groups2Icon/>
                             </ListItemAvatar>
                             <ListItemText
                                 primary={"Groups"}
@@ -61,7 +66,7 @@ export default function Large() {
                     <Link href={`/profile/${user.username}`} style={linkStyle}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <Avatar/>
+                                <ChatIcon/>
                             </ListItemAvatar>
                             <ListItemText
                                 primary={"Chats"}
@@ -71,7 +76,7 @@ export default function Large() {
                     <Link href={`/profile/${user.username}`} style={linkStyle}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <Avatar/>
+                                <DynamicFeedIcon/>
                             </ListItemAvatar>
                             <ListItemText
                                 primary={"Feed"}
@@ -81,7 +86,7 @@ export default function Large() {
                     <Link href={`/profile/${user.username}`} style={linkStyle}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <Avatar/>
+                                <ForumIcon/>
                             </ListItemAvatar>
                             <ListItemText
                                 primary={"Threads"}
