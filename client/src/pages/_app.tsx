@@ -71,7 +71,7 @@ const MyApp: React.FC<MyAppProps> = ({Component, pageProps}) => {
                     {pathname !== '/login' && pathname !== '/register' && (
                         <>
                             {/* Left column */}
-                            <Grid item xs={12} md={12} lg={3}>
+                            <Grid item xs={12} md={3} lg={3}>
                                 <div style={{maxHeight: '100vh', overflowY: 'auto'}}>
                                     <StyledPaper>
                                         <Large/>
@@ -102,11 +102,7 @@ const MyApp: React.FC<MyAppProps> = ({Component, pageProps}) => {
                                         </div>
                                     </Grid>)}
 
-                                <DevSupport ComponentPreviews={ComponentPreviews}
-                                            useInitialHook={useInitial}
-                                >
                                     <Component {...pageProps} />
-                                </DevSupport>
                             </StyledPaper>
                         </div>
                     </Grid>
