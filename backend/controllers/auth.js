@@ -27,7 +27,7 @@ const sendTokenByEmail = async (email, token, name) => {
         });
 
         const mailOptions = {
-            from: `${process.env.WEB_SITE_NAME}`,
+            from: `${process.env.WEB_SITE_NAME}@gmail.com`,
             to: email,
             subject: 'Your Verification Code for Omnisocial',
 
