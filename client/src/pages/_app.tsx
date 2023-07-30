@@ -65,7 +65,7 @@ const MyApp: React.FC<MyAppProps> = ({ Component, pageProps }) => {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             {pathname !== '/login' && pathname !== '/register' && <Navbar />}
-            <Box sx={{ bgcolor: 'background.paper', maxHeight:'100vh' }}>
+            <Box sx={{ bgcolor: 'background.paper'}} style={{ maxHeight: '100vh', overflowY: 'auto' }}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 
                     {pathname !== '/login' && pathname !== '/register' && (
