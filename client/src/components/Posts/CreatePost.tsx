@@ -19,7 +19,7 @@ export default function CreatePost() {
 
     const { data: user, error: userError, isLoading: isUserLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/user/private`,
-        fetcher
+        fetcher, { refreshInterval: 1000 }
     );
 
 

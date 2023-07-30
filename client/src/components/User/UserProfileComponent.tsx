@@ -14,11 +14,11 @@ const UserProfileComponent = (props: any) => {
     // Fetch user data
     const { data: user, error: userError, isLoading: isUserLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/${username}`,
-        fetcher, { refreshInterval: 1 }
+        fetcher, { refreshInterval: 1000 }
     );
     const { data: specificUser, error: specificUserError, isLoading: isSpecificUserLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/user/private`,
-        fetcher, { refreshInterval: 1 }
+        fetcher, { refreshInterval: 1000 }
     );
 
     const [anchorEl, setAnchorEl] = useState(null);

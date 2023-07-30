@@ -46,13 +46,13 @@ export default function Posts(props: any) {
     // Fetch posts data
     const { data: posts, error: postError, isLoading: isPostLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}${url}`,
-        fetcher, { refreshInterval: 1 }
+        fetcher, { refreshInterval: 1000 }
     );
 
     // Fetch user data
     const { data: user, error: userError, isLoading: isUserLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/user/private`,
-        fetcher, { refreshInterval: 1 }
+        fetcher, { refreshInterval: 1000 }
     );
 
     // New state to store real-time posts data received from the WebSocket server

@@ -18,13 +18,13 @@ export default function Users(props:any){
     // Fetch users data
     const { data: users, error: usersError, isLoading: isUsersLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}${url}`,
-        fetcher
+        fetcher, { refreshInterval: 1000 }
     );
 
     // Fetch user data
     const { data: mainuser, error: userError, isLoading: isUserLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/user/private`,
-        fetcher
+        fetcher, { refreshInterval: 1000 }
     );
 
 

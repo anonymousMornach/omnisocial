@@ -23,7 +23,7 @@ import SettingsSkeleton from "@/components/Skeleton/SettingsSkeleton"
 export default function Setting() {
     const {data: specificUser, error: specificUserError, isLoading: isSpecificUserLoading} = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/user/private`,
-        fetcher, { refreshInterval: 1 }
+        fetcher, { refreshInterval: 1000 }
     );
 
     const [isLoading, setIsLoading] = useState(false);
