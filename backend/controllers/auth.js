@@ -30,6 +30,7 @@ const sendTokenByEmail = async (email, token) => {
             from: `${process.env.WEB_SITE_NAME}`,
             to: email,
             subject: 'Your Verification Code for Omnisocial',
+
             html: `<div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
     <div style="background-color: #007BFF; padding: 20px; border-radius: 10px;">
         <h1 style="color: #ffffff; text-align: center;">Omnisocial</h1>
@@ -37,7 +38,8 @@ const sendTokenByEmail = async (email, token) => {
     <div style="background-color: #e7f0fa; padding: 20px; border-radius: 10px; margin-top: 20px;">
         <h2 style="color: #007BFF; text-align: center; margin-bottom: 20px;">Your Verification Code</h2>
         <p style="font-size: 16px; text-align: center;">Hello,</p>
-        <p style="font-size: 16px; text-align: center;">Your verification code is: <span style="font-weight: bold; color: #007BFF;">${token}</span></p>
+        <p style="font-size: 16px; text-align: center;">Your verification code is: </p>
+        <p style="font-weight: bold; font-size: 40px; color: #007BFF;">${token}</p>
         <p style="font-size: 16px; text-align: center;">Thank you!</p>
     </div>
     <div style="background-color: #007BFF; padding: 20px; border-radius: 10px; margin-top: 20px;">
