@@ -19,8 +19,6 @@ import Users from '@/components/Users/Users';
 import CreatePost from '@/components/Posts/CreatePost';
 import Posts from '@/components/Posts/Posts';
 import {styled} from '@mui/material/styles';
-import {DevSupport} from "@react-buddy/ide-toolbox-next";
-import {ComponentPreviews, useInitial} from "@/components/dev";
 
 const StyledPaper = styled(Paper)(({theme}) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
