@@ -7,6 +7,7 @@ import ListAvatar from "@/components/Users/ListAvatar";
 import SettingsIcon from '@mui/icons-material/Settings';
 import {useRouter} from "next/router";
 import ListButton from "@/components/Users/ListButton";
+import {Button} from "@mui/material";
 
 const UserProfileComponent = (props: any) => {
     const router = useRouter()
@@ -115,6 +116,24 @@ const UserProfileComponent = (props: any) => {
                                                     </>
                                                 )
                                         }
+                                        {specificUser.friends.includes(user._id) ? (
+                                            <>
+                                                <Button>Message</Button>
+                                            </>
+                                        ) : specificUser.friendRequestSent.includes(user._id) ? (
+                                            <>
+                                                <Button>Remove friend Request</Button>
+                                            </>
+                                        ) : specificUser.friendRequestRecieved.includes(user._id) ? (
+                                            <>
+                                                <Button>Accept friend Request</Button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Button>Send friend Request</Button>
+                                            </>
+                                        )}
+
                                     </Grid>
                                 </Grid>
                             </CardContent>
