@@ -21,7 +21,7 @@ export default function Mobile() {
 
     const { data: user, error: userError, isLoading: isUserLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/user/private`,
-        fetcher
+        fetcher, { refreshInterval: 1000 }
     );
 
     if (user) {
