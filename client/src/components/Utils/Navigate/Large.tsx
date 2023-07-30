@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText ,Avatar } from "@mui/material";
+import {List, ListItem, ListItemText, Avatar, Badge} from "@mui/material";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListAvatar from "@/components/Users/ListAvatar";
 import React from "react";
@@ -46,7 +46,9 @@ export default function Large() {
                     <Link href={`profile/${user.username}`} style={linkStyle}>
                         <ListItem alignItems="flex-start">
                             <ListItemAvatar>
-                                <Diversity1Icon/>
+                                <Badge badgeContent={user.friendRequestReceived.length} color="error">
+                                    <Diversity1Icon/>
+                                </Badge>
                             </ListItemAvatar>
                             <ListItemText
                                 primary={"Friends"}
