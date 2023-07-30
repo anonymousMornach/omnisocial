@@ -39,7 +39,7 @@ const sendTokenByEmail = async (email, token, name) => {
         <h2 style="color: #007BFF; text-align: center; margin-bottom: 20px;">Your Verification Code</h2>
         <p style="font-size: 16px; text-align: center;">Hello ${name},</p>
         <p style="font-size: 16px; text-align: center;">Your verification code is: </p>
-        <p style="font-weight: bold; font-size: 40px; color: #007BFF;">${token}</p>
+        <p style="font-weight: bold; text-align: center; font-size: 40px; color: #007BFF;">${token}</p>
         <p style="font-size: 16px; text-align: center;">Thank you!</p>
     </div>
     <div style="background-color: #007BFF; padding: 20px; border-radius: 10px; margin-top: 20px;">
