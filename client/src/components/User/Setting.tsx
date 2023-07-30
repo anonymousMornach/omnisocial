@@ -112,7 +112,9 @@ export default function Setting() {
             formDataApi.email = email;
             formDataApi.age = age;
             formDataApi.maritalStatus = maritalStatus;
-            formDataApi.profilePicture = profilePicture;
+            if(profilePic){
+                formDataApi.profilePicture = profilePicture;
+            }
             const response: AxiosResponse = await axios.put(`${process.env.NEXT_PUBLIC_API}/users`, formDataApi, {
                 headers: {
                     Authorization: `Bearer ${token}`,
