@@ -46,54 +46,21 @@ export default function Posts(props: any) {
     // Fetch posts data
     const { data: posts, error: postError, isLoading: isPostLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}${url}`,
-        fetcher
+        fetcher, { refreshInterval: 1 }
     );
 
     // Fetch user data
     const { data: user, error: userError, isLoading: isUserLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/user/private`,
-        fetcher
+        fetcher, { refreshInterval: 1 }
     );
 
     // New state to store real-time posts data received from the WebSocket server
-    const [realTimePosts, setRealTimePosts] = useState<any[]>([]);
     const [expandedMap, setExpandedMap] = useState<{ [key: string]: boolean }>({});
     const [doubleClickedPostId, setDoubleClickedPostId] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [lastClickTime, setLastClickTime] = useState(0); // New state to store the timestamp of the last click
     const postsPerPage = 5; // You can change this to adjust the number of posts per page
-
-    useEffect(() => {
-        // no-op if the socket is already connected
-        socket.connect();
-
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
-    useEffect(() => {
-        const handleLovePost = (data:any)=>{
-            setRealTimePosts((prevPosts: { _id: any; }[]) => {
-                return prevPosts.map((post: { _id: any; }) => {
-                    if (post._id === data._id) {
-                        return {
-                            ...post,
-                            loves: data.loves,
-                        };
-                    }
-                    return post;
-                });
-            });
-        }
-
-        // Set up a WebSocket listener
-        socket.on('love_post', handleLovePost)
-        socket.on("new_post", (newPostData) => {
-            // Update the state with the new posts data
-            console.log("newPosts")
-            setRealTimePosts((prevPosts) => [newPostData, ...prevPosts]);
-        });
-    }, [realTimePosts]);
 
     const handleExpandClick = (postId: any) => {
         setExpandedMap((prevState) => ({
@@ -114,7 +81,6 @@ export default function Posts(props: any) {
                     },
                 }
             );
-            socket.emit("love_post", response.data);
         } catch (err) {
             console.error("Error while loving the post:", err);
         }
@@ -132,7 +98,7 @@ export default function Posts(props: any) {
         setLastClickTime(currentTime); // Update the last click time
     };
     // Combine the data from `posts` (managed by useSWR) and `realTimePosts`
-    const allPosts = [...(posts || []), ...realTimePosts];
+    const allPosts = [...(posts || [])];
 
     // Get current posts based on pagination
     const indexOfLastPost = currentPage * postsPerPage;

@@ -76,14 +76,14 @@ function Navbar(props:any) {
     // Fetch AllUsers data
     const { data: allUsers, error: allUsersError, isLoading: isAllUsersLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/`,
-        fetcher
+        fetcher, { refreshInterval: 1 }
     );
 
     //Fetch User data
 
     const { data: user, error: userError, isLoading: isUserLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/user/private`,
-        fetcher
+        fetcher, { refreshInterval: 1 }
     );
     if(allUsersError || userError){
         return (
