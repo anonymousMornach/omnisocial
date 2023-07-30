@@ -26,7 +26,7 @@ export default function Mobile() {
 
     if (user) {
         return (
-            <Toolbar sx={{ display: "flex", justifyContent: "center"  }}>
+            <Toolbar sx={{ display: "flex", justifyContent: "center", maxWidth: 280 }} style={{ margin: "auto", textAlign:"center" }}>
                 <Grid container spacing={2}>
                     <Grid item>
                         <Link href={`/`} style={linkStyle}>
@@ -40,7 +40,7 @@ export default function Mobile() {
                     <Grid item>
                         <Link href={`/profile/${user.username}`} style={linkStyle}>
                             <IconButton>
-                                <Badge badgeContent={3} color="error">
+                                <Badge badgeContent={user.friendRequestReceived.length} color="error">
                                     <Diversity1Icon/>
                                 </Badge>
                             </IconButton>
