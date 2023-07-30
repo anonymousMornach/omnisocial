@@ -76,7 +76,7 @@ const UserProfileComponent = (props: any) => {
                                             sx={{ cursor: 'pointer' }}
                                             onClick={handleContactClick}
                                         >
-                                            Contact
+                                            Other details
                                         </Typography>
                                         <Menu
                                             anchorEl={anchorEl}
@@ -92,7 +92,13 @@ const UserProfileComponent = (props: any) => {
                                             }}
                                         >
                                             <MenuItem onClick={handleContactClose}>
-                                                {user.email}
+                                                Email: {user.email ? user.email : "N/A"}
+                                            </MenuItem>
+                                            <MenuItem onClick={handleContactClose}>
+                                                Age: {user.age ? user.age : "N/A"}
+                                            </MenuItem>
+                                            <MenuItem onClick={handleContactClose}>
+                                                Marital Status: {user.maritalStatus ? user.maritalStatus : "N/A"}
                                             </MenuItem>
                                         </Menu>
 
