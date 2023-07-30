@@ -22,8 +22,18 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import ListItem from "@mui/material/ListItem";
 import Link from "next/link";
-import Divider from "@mui/material/Divider";
+import {Divider, Paper} from "@mui/material";
 import {useRouter} from "next/router";
+import Mobile from "@/components/Utils/Navigate/Mobile";
+import {styled} from '@mui/material/styles';
+
+const StyledPaper = styled(Paper)(({theme}) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+}));
 
 function Navbar(props:any) {
     const router = useRouter();
@@ -105,7 +115,7 @@ function Navbar(props:any) {
     if (user){
         return (
             <AppBar position="static" sx={{
-                height: 70,
+                height: 130,
                 backgroundColor: '#fff', // Set your desired background color
                 padding: 1,
                 boxShadow: '0px 1px 5px rgba(0, 0, 0, 0.1)', // Add a subtle shadow
@@ -310,6 +320,13 @@ function Navbar(props:any) {
                             </Menu>
                         </Box>
                     </Toolbar>
+                    <Container  sx={{display: {xs: 'block', md: 'block', margin: 'auto'}}}>
+                        <div style={{overflowY: 'auto'}}>
+                            <StyledPaper>
+                                <Mobile/>
+                            </StyledPaper>
+                        </div>
+                    </Container>
                 </Container>
             </AppBar>
         )

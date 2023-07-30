@@ -122,15 +122,15 @@ const UserProfileComponent = (props: any) => {
                                             </>
                                         ) : specificUser.friendRequestSent.includes(user._id) ? (
                                             <>
-                                                <Button>Remove friend Request</Button>
+                                                <Button>Remove</Button>
                                             </>
-                                        ) : specificUser.friendRequestRecieved.includes(user._id) ? (
+                                        ) : specificUser.friendRequestReceived.includes(user._id) ? (
                                             <>
-                                                <Button>Accept friend Request</Button>
+                                                <Button>Accept</Button>
                                             </>
                                         ) : (
                                             <>
-                                                <Button>Send friend Request</Button>
+                                                <Button>Send</Button>
                                             </>
                                         )}
 

@@ -78,31 +78,21 @@ const MyApp: React.FC<MyAppProps> = ({Component, pageProps}) => {
                                     </StyledPaper>
                                 </div>
                             </Grid>
-                            {/* Left column */}
-                            <Grid sx={{display: {xs: 'block', md: 'none', margin: 'auto'}}}>
-                                <div style={{overflowY: 'auto'}}>
-                                    <StyledPaper>
-                                        <Mobile/>
-                                    </StyledPaper>
-                                </div>
-                            </Grid>
                         </>
                     )}
 
                     {/* Middle column */}
-                    <Grid item xs={12} md={pathname !== '/login' && pathname !== '/register' ? 6 : 12}>
+                    <Grid item sx={{display: {xs: 'none', md: 'block'}}}xs={12} md={pathname !== '/login' && pathname !== '/register' ? 6 : 12}>
                         <div style={{maxHeight: '100vh', overflowY: 'auto'}}>
                             <StyledPaper>
-                                {pathname !== '/login' && pathname !== '/register' && (
-                                    <Grid sx={{display: {xs: 'none', md: 'block'}, margin: 'auto'}}>
-                                        <div style={{overflowY: 'auto'}}>
-                                            <StyledPaper>
-                                                <Mobile/>
-                                            </StyledPaper>
-                                        </div>
-                                    </Grid>)}
-
                                     <Component {...pageProps} />
+                            </StyledPaper>
+                        </div>
+                    </Grid>
+                    <Grid item xs={12} md={pathname !== '/login' && pathname !== '/register' ? 6 : 12} sx={{display: {xs: 'block', md: 'none'}}}>
+                        <div>
+                            <StyledPaper>
+                                <Component {...pageProps} />
                             </StyledPaper>
                         </div>
                     </Grid>
