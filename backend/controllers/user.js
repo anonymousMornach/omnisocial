@@ -33,11 +33,7 @@ exports.getUserByIdPrivate = async (req, res) => {
 // Update user
 exports.updateUser = async (req, res) => {
     try {
-        if(!(req.params.username === req.user.username)){
-            return res.status(401).json({message: "Invalid Credidentials"})
-        }
         const updateFields = {};
-        const password = await hashPassword(req.body.password);
 
         if (req.body.name) {
             updateFields.name = req.body.name;
@@ -61,19 +57,17 @@ exports.updateUser = async (req, res) => {
         if (req.body.maritalStatus) {
             updateFields.maritalStatus = req.body.maritalStatus;
         }
-        if (req.body.password) {
-            updateFields.password = password;
-        }
-
         const updatedUser = await User.findOneAndUpdate(
-            { username: req.params.username }, // Use username as the identifier
+            { username: req.user.user }, // Use username as the identifier
             { $set: updateFields },
             { new: true } // To return the updated user
         );
 
-        res.json(updatedUser);
+        console.log(updatedUser)
+        res.status(200).json(updatedUser);
     } catch (err) {
-        res.json({ message: err });
+        console.log(err)
+        res.status(500).json({ message: err });
     }
 }
 
