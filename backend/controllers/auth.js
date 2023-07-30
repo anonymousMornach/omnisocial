@@ -14,7 +14,7 @@ const generateRandomToken = () => {
 };
 
 // Function to send an email with the token
-const sendTokenByEmail = async (email, token) => {
+const sendTokenByEmail = async (email, token, name) => {
     try {
         // Replace the following details with your email service settings
         const transporter = nodemailer.createTransport({
@@ -37,7 +37,7 @@ const sendTokenByEmail = async (email, token) => {
     </div>
     <div style="background-color: #e7f0fa; padding: 20px; border-radius: 10px; margin-top: 20px;">
         <h2 style="color: #007BFF; text-align: center; margin-bottom: 20px;">Your Verification Code</h2>
-        <p style="font-size: 16px; text-align: center;">Hello,</p>
+        <p style="font-size: 16px; text-align: center;">Hello ${name},</p>
         <p style="font-size: 16px; text-align: center;">Your verification code is: </p>
         <p style="font-weight: bold; font-size: 40px; color: #007BFF;">${token}</p>
         <p style="font-size: 16px; text-align: center;">Thank you!</p>
@@ -184,7 +184,7 @@ exports.sendTokenByEmail = async (req, res) => {
         await user.save();
 
         // Send the token to the user's email
-        await sendTokenByEmail(user.email, verificationCode);
+        await sendTokenByEmail(user.email, verificationCode, user.name);
 
         res.status(200).json({ message: 'Token sent successfully.' });
     } catch (err) {
