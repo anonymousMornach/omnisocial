@@ -18,6 +18,7 @@ import {
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import axios, { AxiosResponse } from 'axios';
 import { getToken } from '@/utils/token';
+import SettingsSkeleton from "@/components/Skeleton/SettingsSkeleton"
 
 export default function Setting() {
     const {data: specificUser, error: specificUserError, isLoading: isSpecificUserLoading} = useSWR(
@@ -132,11 +133,15 @@ export default function Setting() {
     };
 
     if (isSpecificUserLoading) {
-        return <p>Loading...</p>;
+        return (
+            <SettingsSkeleton/>
+        );
     }
 
     if (specificUserError) {
-        return <p>Error loading data</p>;
+        return (
+            <SettingsSkeleton/>
+        );
     }
 
     if (specificUser) {
