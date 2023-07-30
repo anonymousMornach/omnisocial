@@ -1,11 +1,32 @@
 // pages/_app.js
-import React, { useEffect } from 'react';
-import { ThemeProvider, CssBaseline, Container, Box, Grid } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+    ThemeProvider,
+    CssBaseline,
+    Container,
+    Box,
+    Grid,
+    Typography,
+    Paper,
+} from '@mui/material';
 import Navbar from '@/components/Utils/Navbar';
-import { useRouter } from "next/router";
-import { authenticate } from "@/utils/auth";
-
+import { useRouter } from 'next/router';
+import { authenticate } from '@/utils/auth';
 import { theme } from '@/styles/theme';
+import Large from '@/components/Utils/Navigate/Large';
+import Mobile from '@/components/Utils/Navigate/Mobile';
+import Users from '@/components/Users/Users';
+import CreatePost from '@/components/Posts/CreatePost';
+import Posts from '@/components/Posts/Posts';
+import { styled } from '@mui/material/styles';
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+}));
 
 interface MyAppProps {
     Component: React.ComponentType<any>;
@@ -15,7 +36,7 @@ interface MyAppProps {
 const MyApp: React.FC<MyAppProps> = ({ Component, pageProps }) => {
     const router = useRouter();
     const { pathname } = router;
-    const [authenticated, setAuthenticated] = React.useState(false);
+    const [authenticated, setAuthenticated] = useState(false);
 
     useEffect(() => {
         if (pathname !== '/login' && pathname !== '/register') {
@@ -46,11 +67,66 @@ const MyApp: React.FC<MyAppProps> = ({ Component, pageProps }) => {
             {pathname !== '/login' && pathname !== '/register' && <Navbar />}
             <Box sx={{ bgcolor: 'background.paper' }}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    <Component {...pageProps} />
+
+                    {pathname !== '/login' && pathname !== '/register' && (
+                        <>
+                            {/* Left column */}
+                            <Grid item xs={12} md={3}>
+                                <div style={{ maxHeight: '100vh', overflowY: 'auto' }}>
+                                    <StyledPaper>
+                                        <Large />
+                                    </StyledPaper>
+                                </div>
+                            </Grid>
+                            {/* Left column */}
+                            <Grid sx={{ display: { xs: 'block', md: 'none', margin: 'auto' } }}>
+                                <div style={{ overflowY: 'auto' }}>
+                                    <StyledPaper>
+                                        <Mobile />
+                                    </StyledPaper>
+                                </div>
+                            </Grid>
+                        </>
+                    )}
+
+                    {/* Middle column */}
+                    <Grid item xs={12} md={pathname !== '/login' && pathname !== '/register' ? 6 : 12} >
+                        <div style={{ maxHeight: '100vh', overflowY: 'auto' }}>
+                            <StyledPaper>
+                                {pathname !== '/login' && pathname !== '/register' && (<Grid sx={{ display: { xs: 'none', md: 'block' }, margin: 'auto' }}>
+                                    <div style={{ overflowY: 'auto' }}>
+                                        <StyledPaper>
+                                            <Mobile />
+                                        </StyledPaper>
+                                    </div>
+                                </Grid>)}
+
+                                <Component {...pageProps} />
+                            </StyledPaper>
+                        </div>
+                    </Grid>
+
+                    {pathname !== '/login' && pathname !== '/register' && (
+                        <Grid item md={3} sx={{ display: { xs: 'none', md: 'block' } }}>
+                            <div style={{ maxHeight: '100vh', overflowY: 'auto' }}>
+                                <StyledPaper>
+                                    <Typography variant="h6">Friends</Typography>
+                                    <Users url={'/friends/friend/private'} title={'Friends'} />
+                                </StyledPaper>
+                                <StyledPaper style={{ marginTop: 20 }}>
+                                    <Typography variant="h6">Users</Typography>
+                                    <Users url={'/friends/nonfriend/private'} title={'Users'} />
+                                </StyledPaper>
+                            </div>
+                        </Grid>
+                    )}
                 </Grid>
+
+
+                {/* Right column */}
             </Box>
         </ThemeProvider>
     );
-}
+};
 
 export default MyApp;

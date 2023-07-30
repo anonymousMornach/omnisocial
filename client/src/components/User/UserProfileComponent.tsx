@@ -4,12 +4,19 @@ import { fetcher } from "@/utils/fetcher";
 import useSWR from "swr";
 import UserProfileSkeleton from "@/components/Skeleton/UserProfileSkeleton";
 import ListAvatar from "@/components/Users/ListAvatar";
+import SettingsIcon from '@mui/icons-material/Settings';
+import {useRouter} from "next/router";
 
 const UserProfileComponent = (props: any) => {
+    const router = useRouter()
     const { username } = props;
     // Fetch user data
     const { data: user, error: userError, isLoading: isUserLoading } = useSWR(
         `${process.env.NEXT_PUBLIC_API}/users/${username}`,
+        fetcher
+    );
+    const { data: specificUser, error: specificUserError, isLoading: isSpecificUserLoading } = useSWR(
+        `${process.env.NEXT_PUBLIC_API}/users/user/private`,
         fetcher
     );
 
@@ -22,14 +29,17 @@ const UserProfileComponent = (props: any) => {
     const handleContactClose = () => {
         setAnchorEl(null);
     };
+    const goToSettings = ()=>{
+        router.push("/settings")
+    }
 
-    if (userError) {
+    if (userError || specificUserError) {
         return <div>
             <UserProfileSkeleton />
         </div>;
     }
 
-    if (isUserLoading) {
+    if (isUserLoading || isSpecificUserLoading) {
         return (
             <div>
                 <UserProfileSkeleton />
@@ -37,7 +47,7 @@ const UserProfileComponent = (props: any) => {
         );
     }
 
-    if (user) {
+    if (user && specificUser) {
         return (
             <div>
                 <Grid container sx={{ justifyContent: "center", alignItems: "center", spacing: 3 }}>
@@ -85,6 +95,19 @@ const UserProfileComponent = (props: any) => {
                                                 {user.email}
                                             </MenuItem>
                                         </Menu>
+
+                                        {
+                                            (user._id === specificUser._id) ?
+                                                (
+                                                    <>
+                                                        <SettingsIcon onClick={goToSettings} sx={{marginTop:2}}/>
+                                                    </>
+                                                ) :
+                                                (
+                                                    <>
+                                                    </>
+                                                )
+                                        }
                                     </Grid>
                                 </Grid>
                             </CardContent>

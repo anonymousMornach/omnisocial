@@ -286,6 +286,17 @@ function Navbar(props:any) {
                                         Profile
                                     </Typography>
                                 </MenuItem>
+                                <MenuItem onClick={()=>{router.push("/settings")}}>
+                                    <Typography
+                                        sx={{
+                                            color: 'text.primary', // Set your desired text color
+                                            textDecoration: 'none',
+                                            textTransform: 'capitalize', // Capitalize the "Logout" item
+                                        }}
+                                    >
+                                        Settings
+                                    </Typography>
+                                </MenuItem>
                                 <MenuItem onClick={handleLogout}>
                                     <Typography
                                         sx={{
