@@ -52,7 +52,7 @@ const UserProfileComponent = (props: any) => {
     if (user && specificUser) {
         return (
             <div>
-                <Grid container sx={{ justifyContent: "center", alignItems: "center", spacing: 3 }}>
+                <Grid container sx={{ justifyContent: "center", alignItems: "center", spacing: 3, textAlign:"center" }}>
                     <Grid item xs={12} sm={8} md={6}>
                         <Card sx={{ boxShadow: 3 }}>
                             <CardContent>
@@ -111,28 +111,23 @@ const UserProfileComponent = (props: any) => {
                                                         <SettingsIcon onClick={goToSettings} sx={{marginTop:2}}/>
                                                     </>
                                                 ) :
-                                                (
+                                                specificUser.friends.includes(user._id) ? (
                                                     <>
+                                                        <Button>Message</Button>
                                                     </>
-                                                )
-                                        }
-                                        {specificUser.friends.includes(user._id) ? (
-                                            <>
-                                                <Button>Message</Button>
-                                            </>
-                                        ) : specificUser.friendRequestSent.includes(user._id) ? (
-                                            <>
-                                                <Button>Remove</Button>
-                                            </>
-                                        ) : specificUser.friendRequestReceived.includes(user._id) ? (
-                                            <>
-                                                <Button>Accept</Button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Button>Send</Button>
-                                            </>
-                                        )}
+                                                ) : specificUser.friendRequestSent.includes(user._id) ? (
+                                                    <>
+                                                        <Button>Unsend</Button>
+                                                    </>
+                                                ) : specificUser.friendRequestReceived.includes(user._id) ? (
+                                                    <>
+                                                        <Button>Accept</Button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Button>Send</Button>
+                                                    </>
+                                                )}
 
                                     </Grid>
                                 </Grid>
